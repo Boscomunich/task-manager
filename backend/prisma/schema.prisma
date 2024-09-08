@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String      @id @default(uuid())
+  email             String      @unique
+  username          String
+  password          String?
+  verified          Boolean     @default(false)
+  workspacesOwned   Workspace[] @relation("Owner")
+  workspacesWorking Workspace[] @relation("Worker")
+  assignedLists     List[]      @relation("UserLists")
+  assignedCards     Card[]      @relation("UserCards")
+}
+
+model Workspace {
+  id      String @id @default(uuid())
+  name    String
+  owner   User   @relation("Owner", fields: [userId], references: [id])
+  userId  String
+  workers User[] @relation("Worker")
+  lists   List[]
+}
+
+model List {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+  cards       Card[]
+  assignedTo  User[]    @relation("UserLists")
+}
+
+model Card {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  startDate   DateTime?
+  endDate     DateTime?
+  list        List        @relation(fields: [listId], references: [id])
+  listId      String
+  checkList   CheckList[]
+  assignedTo  User[]      @relation("UserCards")
+}
+
+model CheckList {
+  id      String  @id @default(uuid())
+  name    String
+  checked Boolean @default(false)
+  card    Card    @relation(fields: [cardId], references: [id])
+  cardId  String
+}
