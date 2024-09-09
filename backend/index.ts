@@ -1,13 +1,14 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors'
 import errorHandler from './src/middleware/errors';
 import Auth from './src/middleware/auth';
-import { graphqlHTTP } from './node_modules/express-graphql/index';
+import { createHandler } from 'graphql-http/lib/use/express';
 
 const app = express()
 const client = process.env.CLIENT
-const port = process.env.PORT
-
 
 app.use(cors({
     origin: client,
@@ -25,14 +26,16 @@ app.use('/graphql', (req, res, next) => {
     Auth(req, res, next);
 });
 
-app.use('/graphql');
+app.use('/graphql', createHandler({
+    schema
+}));
 
 
 app.use(errorHandler)
 
 const start = async () => {
-    app.listen(port, () => {
-        console.log('listening to port', port)
+    app.listen(process.env.PORT, () => {
+        console.log('listening to port', process.env.PORT)
     }) 
 }
 start()
