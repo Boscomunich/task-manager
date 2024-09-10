@@ -1,12 +1,13 @@
 import { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLID, GraphQLBoolean, GraphQLList } from 'graphql';
 
-const UserType: GraphQLObjectType = new GraphQLObjectType({
+export const UserType: GraphQLObjectType = new GraphQLObjectType({
     name: 'User',
     fields: () => ({
         id: { type: GraphQLID },
         username: { type: GraphQLString },
         email: { type: GraphQLString },
         password: { type: GraphQLString },
+        token: { type: GraphQLString },
         verified: { type: GraphQLBoolean },
         workspacesOwned: { type: new GraphQLList(WorkspaceType) },
         workspacesWorking: { type: new GraphQLList(WorkspaceType) },
@@ -15,7 +16,7 @@ const UserType: GraphQLObjectType = new GraphQLObjectType({
     })
 });
 
-const WorkspaceType: GraphQLObjectType = new GraphQLObjectType({
+export const WorkspaceType: GraphQLObjectType = new GraphQLObjectType({
     name: 'Workspace',
     fields: () => ({
         id: { type: GraphQLID },
@@ -27,7 +28,7 @@ const WorkspaceType: GraphQLObjectType = new GraphQLObjectType({
     })
 });
 
-const ListType: GraphQLObjectType = new GraphQLObjectType({
+export const ListType: GraphQLObjectType = new GraphQLObjectType({
     name: 'List',
     fields: () => ({
         id: { type: GraphQLID },
@@ -40,7 +41,7 @@ const ListType: GraphQLObjectType = new GraphQLObjectType({
     })
 });
 
-const CardType: GraphQLObjectType = new GraphQLObjectType({
+export const CardType: GraphQLObjectType = new GraphQLObjectType({
     name: 'Card',
     fields: () => ({
         id: { type: GraphQLID },
@@ -55,7 +56,7 @@ const CardType: GraphQLObjectType = new GraphQLObjectType({
     })
 });
 
-const CheckListType: GraphQLObjectType = new GraphQLObjectType({
+export const CheckListType: GraphQLObjectType = new GraphQLObjectType({
     name: 'CheckList',
     fields: () => ({
         id: { type: GraphQLID },
