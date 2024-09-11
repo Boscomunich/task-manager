@@ -3,12 +3,12 @@ import crypto  from 'crypto'
 import { createJWT, encryptPassWord } from '../utils/authutils'
 import bcrypt from 'bcryptjs'
 
-type ArgsTypes = {
+type UserTypes = {
     email: string;
     password: string;
 };
 
-interface Register extends ArgsTypes {
+interface Register extends UserTypes {
     username: string;
 }
 
@@ -51,7 +51,7 @@ export async function registerUser (args: Register) {
 }
 
 //log user in
-export async function login (args: ArgsTypes) {
+export async function login (args: UserTypes) {
     const { email, password } = args
     //checks for email and password
     if (!password || !email) throw new Error ('all fields are required')
