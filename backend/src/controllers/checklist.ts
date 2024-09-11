@@ -3,13 +3,8 @@ import crypto from 'crypto';
 
 const prisma = new PrismaClient();
 
-type CheckListType = {
-    name: string;
-    cardId: string
-}
 
-export async function createCheckList (args: CheckListType) {
-    const { name, cardId } = args
+export async function createCheckList (name: string, cardId: string) {
     if ( !name || !cardId ) throw new Error ('all fields are required') 
     const id = crypto.randomBytes(16).toString('hex');
     const checkList = await prisma.checkList.create({

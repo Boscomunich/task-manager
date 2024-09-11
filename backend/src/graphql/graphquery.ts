@@ -1,24 +1,30 @@
-import { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLID, GraphQLBoolean, GraphQLList } from 'graphql';
-import { UserType } from './graphschema';
-import { login, registerUser } from '../controllers/user';
-import { UserMutations } from './usermutation';
+import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql';
+import { UserMutations } from './mutations/usermutation';
+import { WorkspaceMutations } from './mutations/workspacemutation';
+import { ListMutations } from './mutations/listmutation';
+import { CardMutations } from './mutations/cardmutation';
+import { CheckListMutations } from './mutations/checklistmutation';
+import { WorkspaceQuery } from './queries/workspacequery';
+import { ListQuery } from './queries/listquery';
+import { CardQuery } from './queries/cardquery';
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        hello: {
-            type: GraphQLString,
-            resolve() {
-                return 'Hello, world!';
-            }
-        }
+        ...WorkspaceQuery,
+        ...ListQuery,
+        ...CardQuery
     }
 });
 
 const RootMutation: GraphQLObjectType = new GraphQLObjectType ({
     name: 'RootMutationType',
     fields: {
-        ...UserMutations
+        ...UserMutations,
+        ...WorkspaceMutations,
+        ...ListMutations,
+        ...CardMutations,
+        ...CheckListMutations
     }
 })
 

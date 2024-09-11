@@ -12,12 +12,17 @@ type CardType = {
     startDate?: string
 }
 
-interface ExtendedCardType extends CardType {
+type UpdateCardType = {
     id: string
-    updatedAt: string
+    updatedAt?: string
+    name?: string;
+    listId?: string;
+    description?: string;
+    endDate?: string
+    startDate?: string
 }
 
-export async function createList(args: CardType) {
+export async function createCard(args: CardType) {
     const { name, description, listId, assignedTo, startDate, endDate } = args;
     if (!name || !listId) throw new Error('Name is required');
 
@@ -57,7 +62,7 @@ export async function createList(args: CardType) {
     return card;
 }
 
-export async function updateCard(args: ExtendedCardType) {
+export async function updateCard(args: UpdateCardType) {
     const { id, name, description, listId, startDate, endDate, updatedAt } = args;
 
     // Check if at least one field is provided

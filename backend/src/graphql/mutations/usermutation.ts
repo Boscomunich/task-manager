@@ -1,6 +1,6 @@
 import { GraphQLFieldConfigMap, GraphQLString } from 'graphql';
-import { UserType } from './graphschema';
-import { login, registerUser } from '../controllers/user';
+import { UserType } from '../graphschema';
+import { login, registerUser } from '../../controllers/user';
 
 export const UserMutations: GraphQLFieldConfigMap<any, any> = {
     Login: {

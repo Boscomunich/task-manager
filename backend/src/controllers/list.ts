@@ -10,9 +10,11 @@ type ListType = {
     assignedTo?: string[];
 }
 
-interface ExtendedListType extends ListType {
-    updatedAt: string
+type UpdateListType = {
+    updatedAt?: string
     id: string
+    name?: string
+    description?: string
 }
 
 export async function createList(args: ListType) {
@@ -89,11 +91,11 @@ export async function deleteList (id: string) {
     return deletedList;
 }
 
-export async function updateList(args: ExtendedListType) {
-    const { id, name, description, assignedTo, updatedAt } = args;
+export async function updateList(args: UpdateListType) {
+    const { id, name, description, updatedAt } = args;
 
     // Check if at least one field is provided
-    if (!name && !description && !assignedTo && !updatedAt) throw new Error('no updates to be made');
+    if (!name && !description && !updatedAt) throw new Error('no updates to be made');
 
     const data: {
         name?: string;

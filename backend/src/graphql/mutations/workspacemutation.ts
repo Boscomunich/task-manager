@@ -1,9 +1,9 @@
 import { GraphQLFieldConfigMap, GraphQLID, GraphQLString } from "graphql";
-import { WorkspaceType } from "./graphschema";
-import { addWorkSpaceCollaborator, CreateWorkSpace, removeWorkSpaceCollaborator } from "../controllers/workspace";
+import { WorkspaceType } from "../graphschema";
+import { addWorkSpaceCollaborator, CreateWorkSpace, deleteWorkspace, removeWorkSpaceCollaborator } from "../../controllers/workspace";
 
-export const WorkSpaceMutations: GraphQLFieldConfigMap<any, any> = {
-    CreateWorkSpace: {
+export const WorkspaceMutations: GraphQLFieldConfigMap<any, any> = {
+    CreateWorkspace: {
         type: WorkspaceType,
         args: {
             name: { type: GraphQLString },
@@ -40,4 +40,13 @@ export const WorkSpaceMutations: GraphQLFieldConfigMap<any, any> = {
             return await removeWorkSpaceCollaborator(args.owner, args.id, args.userId)
         }
     },
+    DeleteWorkspace: {
+        type: WorkspaceType,
+        args: {
+            id: {type: GraphQLID},
+        },
+        async resolve (parent, args) {
+            return await deleteWorkspace(args.id)
+        }
+    }
 };

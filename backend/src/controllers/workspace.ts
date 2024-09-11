@@ -59,3 +59,13 @@ export async function removeWorkSpaceCollaborator (owner:string, id: string, use
     });
     return updatedWorkspace
 }
+
+export async function deleteWorkspace (id: string) {
+    if (!id) throw new Error('ID is required');
+
+    const deletedWorkspace = await prisma.card.delete({
+        where: { id },
+    });
+
+    return deletedWorkspace;
+}
