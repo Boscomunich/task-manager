@@ -39,12 +39,34 @@ export const CREATE_LIST = gql`
         }
     }
 `
+export const DELETE_LIST = gql`
+    mutation DeleteListMutation ($id: ID! ) {
+        CreateList(id: $id) {
+            id
+            name
+            description
+        }
+    }
+`
 export const CREATE_CARD = gql`
     mutation CreateCardMutation ($name: String!, $description: String, $listId: ID! ) {
         CreateCard(name: $name, description: $description, listId: $listId) {
             id
             name
             description
+            createdAt
+            updatedAt
+        }
+    }
+`
+export const DELETE_CARD = gql`
+    mutation DeleteCardMutation ($id: ID! ) {
+        DeleteCard(id: $id) {
+            id
+            name
+            description
+            createdAt
+            updatedAt
         }
     }
 `

@@ -14,11 +14,18 @@ import { LOGIN } from "@/graphql/mutation"
 import { useMutation } from "@apollo/client"
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
 
+import { useToast } from "@/hooks/use-toast"
+import { Toaster } from "@/components/ui/toaster"
+import { useNavigate } from "react-router-dom"
+
 export default function Signin () {
     // login hook from apollo client
     const [Login, { loading }] = useMutation(LOGIN);
     //signin hook from react auth kit
     const signIn = useSignIn();
+    const navigate = useNavigate()
+
+    const { toast } = useToast()
 
     //form validation
     const formSchema = z.object({
@@ -57,9 +64,14 @@ export default function Signin () {
                         verified: response.data.Login.verified,
                     }
                 })
+                navigate('/dashboard')
             }
-        } catch (error) {
-            console.log(error)
+        } catch (error: any) {
+            toast({
+                variant: "destructive",
+                title: "invalid credentials",
+                description: `${error.message}`,
+            })
         }
         
     }
@@ -71,6 +83,7 @@ export default function Signin () {
                     <h1 className="text-center text-2xl font-semibold">
                         SignIn
                     </h1>
+                    <Toaster/>
                     <FormField
                     control={form.control}
                     name="email"

@@ -1,6 +1,6 @@
 import { GET_WORKSPACE } from "@/graphql/query";
 import { useMutation, useQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from 'react-router-dom';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button";
@@ -18,19 +18,9 @@ export default function Board () {
 
     const [CreateList, { loading }] = useMutation(CREATE_LIST);
 
-    const { data, error } = useQuery(GET_WORKSPACE, {
+    const { data } = useQuery(GET_WORKSPACE, {
         variables: { id: params.id },
     });
-
-    useEffect(() => {
-        console.log(params.id)
-        if (data) {
-            console.log(data);
-        }
-        if (error) {
-            console.log(error)
-        }
-    }, [data, error]);
 
     async function createList () {
         if (!name) return

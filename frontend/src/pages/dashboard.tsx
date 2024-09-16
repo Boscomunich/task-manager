@@ -18,7 +18,14 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/ui/input';
 import { CREATE_WORKSPACE } from '@/graphql/mutation';
 import Card from '@/components/dashboard/card';
-
+import { 
+        DropdownMenu, 
+        DropdownMenuContent, 
+        DropdownMenuItem,
+        DropdownMenuTrigger 
+    } from '@/components/ui/dropdown-menu';
+import useSignOut from 'react-auth-kit/hooks/useSignOut';
+import { useNavigate } from 'react-router-dom';
 
 type User = {
     id: string
@@ -36,11 +43,8 @@ export default function DashBoard() {
         variables: { id: user?.id },
     });
 
-    useEffect(() => {
-        if (data) {
-            console.log(data);
-        }
-    }, [data]);
+    const signOut = useSignOut()
+    const navigate = useNavigate()
 
     //form validation
     const formSchema = z.object({
@@ -69,6 +73,11 @@ export default function DashBoard() {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    async function handleSignout () {
+        await signOut()
+        navigate('/login')
     }
 
     return (
@@ -123,9 +132,23 @@ export default function DashBoard() {
                     </Dialog>
                 </div>
                 <div className='w-[50%] flex justify-end mx-3'>
-                    <div className='h-10 w-10 text-center pt-2 text-white font-semibold rounded-full bg-red-400'>
-                    {user?.username.slice(0, 2)}
-                    </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild className="cursor-pointer">
+                            <div className='h-10 w-10 text-center pt-2 text-white font-semibold rounded-full bg-red-400'>
+                                {user?.username.slice(0, 2)}
+                            </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align='start'>
+                            <DropdownMenuItem className="gap-2 text-[12px] cursor-pointer"
+                            >
+                                some
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="gap-2 text-[12px] cursor-pointer"
+                            onClick={() => handleSignout()}>
+                                Logout
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>     
                 </div>
             </div>
             <div className='mt-[50px] lg:px-10 md:px-5 sm:px-3'>

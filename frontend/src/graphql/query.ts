@@ -47,6 +47,7 @@ export const GET_LIST = gql`
                 description
                 createdAt
                 updatedAt
+                listId
             }
         }
     }

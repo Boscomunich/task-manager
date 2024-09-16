@@ -12,11 +12,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { useMutation } from '@apollo/client';
 import { REGISTER } from "@/graphql/mutation"
-import { useState } from "react"
+import { useToast } from "@/hooks/use-toast"
 
 export default function Signup () {
     //register hook from apollo client
     const [Register, { loading }] = useMutation(REGISTER);
+
+    const { toast } = useToast()
 
     // form validation with zod
     const formSchema = z.object({
@@ -47,7 +49,11 @@ export default function Signup () {
             const response = await Register ({ variables: { username: values.username, email: values.email, password: values.password } });
             console.log(response)
         } catch (error: any) {
-            console.log(error?.message)
+        toast({
+                variant: "destructive",
+                title: "invalid credentials",
+                description: `${error.message}`,
+            })
         }
     }
 
