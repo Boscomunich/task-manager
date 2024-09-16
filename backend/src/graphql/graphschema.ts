@@ -22,6 +22,7 @@ export const WorkspaceType: GraphQLObjectType = new GraphQLObjectType({
         id: { type: GraphQLID },
         createdAt: {type: GraphQLString},
         updatedAt: {type: GraphQLString},
+        description: {type: GraphQLString},
         name: { type: GraphQLString },
         owner: { type: UserType },
         userId: {type: GraphQLString},
@@ -49,7 +50,7 @@ export const CardType: GraphQLObjectType = new GraphQLObjectType({
     name: 'Card',
     fields: () => ({
         id: { type: GraphQLID },
-        title: { type: GraphQLString },
+        name: { type: GraphQLString },
         description: { type: GraphQLString },
         startDate: {type: GraphQLString},
         endDate: {type: GraphQLString},

@@ -1,4 +1,4 @@
-import { GraphQLFieldConfigMap, GraphQLID, GraphQLString } from "graphql";
+import { GraphQLFieldConfigMap, GraphQLID, GraphQLList, GraphQLString } from "graphql";
 import { WorkspaceType } from "../graphschema";
 import { PrismaClient } from '@prisma/client';
 
@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export const WorkspaceQuery: GraphQLFieldConfigMap<any, any> = {
     GetAllWorkspace: {
-        type: WorkspaceType,
+        type: GraphQLList (WorkspaceType),
         args: {
             userId: {type: GraphQLID}
         },
