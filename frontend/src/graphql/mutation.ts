@@ -70,3 +70,32 @@ export const DELETE_CARD = gql`
         }
     }
 `
+export const ADD_USER_TO_CARD = gql`
+    mutation IncludeUserToCardMutation ($id: ID!, $userEmail: String! ) {
+        IncludeUserToCard(id: $id, userEmail: $userEmail) {
+            assignedTo{
+                id
+                username
+                email
+            }
+        }
+    }
+`
+export const REMOVE_USER_FROM_CARD = gql`
+    mutation RemoveUserFromCardMutation ($id: ID!, $userId: ID! ) {
+        RemoveUserFromCard(id: $id, userId: $userId) {
+            assignedTo{
+                id
+                username
+                email
+            }
+        }
+    }
+`
+export const UPDATE_CARD = gql`
+    mutation UpdateCardMutation ($id: ID!, $listId: ID, $name: String, $description: String, $startDate: String, $endDate: String, $updatedAt: String ) {
+        UpdateCard(id: $id, listId: $listId, name: $name, description: $description, startDate: $startDate, endDate: $endDate, updatedAt: $updatedAt) {
+            id
+        }
+    }
+`

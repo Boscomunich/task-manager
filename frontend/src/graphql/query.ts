@@ -52,3 +52,27 @@ export const GET_LIST = gql`
         }
     }
 `
+export const GET_CARD = gql`
+    query GetCardQuery ($id: ID!) {
+        GetCard (id: $id) {
+            id
+            name
+            description
+            createdAt
+            updatedAt
+            startDate
+            endDate
+            listId
+            assignedTo {
+                id
+                username
+                email
+            }
+            checkList {
+                id
+                name
+                checked
+            }
+        }
+    }
+`

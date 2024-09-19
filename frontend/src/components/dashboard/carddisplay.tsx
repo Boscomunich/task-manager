@@ -8,6 +8,8 @@ import {
 import { useMutation } from "@apollo/client"
 import { DELETE_CARD } from "@/graphql/mutation"
 import { GET_LIST } from "@/graphql/query"
+import { useState } from "react"
+import CardDetails from "./carddetails"
 
 type CardType = {
     id: string
@@ -17,6 +19,8 @@ type CardType = {
 }
 
 export default function CardDisplay ({id, name, description, listId}: CardType) {
+
+    const [showCardDetails, setShowCardDetails] = useState(false)
 
     const [DeleteCard] = useMutation(DELETE_CARD);
 
@@ -50,12 +54,20 @@ export default function CardDisplay ({id, name, description, listId}: CardType) 
                         <Trash2 className="text-[12px]"/>
                         Delete
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="gap-2 text-[12px] cursor-pointer">
+                    <DropdownMenuItem className="gap-2 text-[12px] cursor-pointer"
+                    onClick={() => setShowCardDetails(true)}>
                         <Fullscreen className="text-[12px]"/>
                         View card
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+            {
+                showCardDetails && 
+                <CardDetails 
+                id={id}
+                showCardDetails={showCardDetails}
+                setShowCardDetails={setShowCardDetails}/>
+            }
         </div>
     )
 }

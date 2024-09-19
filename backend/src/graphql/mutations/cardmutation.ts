@@ -69,10 +69,10 @@ export const CardMutations: GraphQLFieldConfigMap<any, any> = {
         type: CardType,
         args: {
             id: {type: GraphQLID},
-            userId: {type: GraphQLID},
+            userEmail: {type: GraphQLString},
         },
         async resolve (parent, args) {
-            return await includeUserToCard(args.id, args.userId)
+            return await includeUserToCard(args.id, args.userEmail)
         }
     },
     RemoveUserFromCard: {
