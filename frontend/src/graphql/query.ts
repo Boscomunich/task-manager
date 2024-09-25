@@ -1,5 +1,35 @@
 import { gql } from '@apollo/client';
 
+export const GET_USER = gql`
+    query GetUserQuery ($id: ID!) {
+        GetUser (id: $id) {
+            id
+            username
+            email
+            workspacesOwned{
+                id
+                name
+                userId
+                workers{
+                    id
+                    username
+                    email
+                }
+                lists{
+                    id
+                    name
+                }
+            }
+            workspacesWorking {
+                id
+            }
+            assignedCards{
+                id
+            }
+        }
+    }
+`
+
 export const GET_ALL_WORKSPACE = gql`
     query GetAllWorkspaceQuery ($id: ID!) {
         GetAllWorkspace (userId: $id) {
@@ -18,6 +48,7 @@ export const GET_WORKSPACE = gql`
             name
             createdAt
             updatedAt
+            userId
             workers {
                 id
                 username
@@ -48,6 +79,14 @@ export const GET_LIST = gql`
                 createdAt
                 updatedAt
                 listId
+            }
+            workspace {
+                userId
+                workers {
+                    id
+                    username
+                    email
+                }
             }
         }
     }

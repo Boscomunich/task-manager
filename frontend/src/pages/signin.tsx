@@ -13,19 +13,18 @@ import { Input } from "@/components/ui/input"
 import { LOGIN } from "@/graphql/mutation"
 import { useMutation } from "@apollo/client"
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
-
-import { useToast } from "@/hooks/use-toast"
-import { Toaster } from "@/components/ui/toaster"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { PulseLoader } from "react-spinners"
 
 export default function Signin () {
+    const [errMsg, setErrMsg] = useState('')
     // login hook from apollo client
     const [Login, { loading }] = useMutation(LOGIN);
     //signin hook from react auth kit
     const signIn = useSignIn();
     const navigate = useNavigate()
 
-    const { toast } = useToast()
 
     //form validation
     const formSchema = z.object({
@@ -67,11 +66,7 @@ export default function Signin () {
                 navigate('/dashboard')
             }
         } catch (error: any) {
-            toast({
-                variant: "destructive",
-                title: "invalid credentials",
-                description: `${error.message}`,
-            })
+            setErrMsg(error.message)
         }
         
     }
@@ -83,7 +78,11 @@ export default function Signin () {
                     <h1 className="text-center text-2xl font-semibold">
                         SignIn
                     </h1>
-                    <Toaster/>
+                    <p className="text-sm text-red-400">
+                        {
+                            errMsg
+                        }
+                    </p>
                     <FormField
                     control={form.control}
                     name="email"
@@ -112,8 +111,21 @@ export default function Signin () {
                     type="submit" 
                     variant='outline'
                     disabled={loading}>
-                        Submit
+                        {
+                            loading ? 
+                            <PulseLoader size={5} color='#3219F5'/> 
+                            :
+                            'Submit'
+                        }
                     </Button>
+                    <div className="flex justify-center gap-4 items-center">
+                        <p className="text-sm">
+                            don’t have an account?
+                        </p>
+                        <Link to='/register' className="text-blue-500">
+                            Signup
+                        </Link>
+                    </div>
                 </form>
             </Form>
         </div>

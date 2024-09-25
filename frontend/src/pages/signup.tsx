@@ -12,13 +12,16 @@ import {
 import { Input } from "@/components/ui/input"
 import { useMutation } from '@apollo/client';
 import { REGISTER } from "@/graphql/mutation"
-import { useToast } from "@/hooks/use-toast"
+import { useState } from "react"
+import { PulseLoader } from "react-spinners"
+import { Link } from "react-router-dom"
+
 
 export default function Signup () {
+    const [errMsg, setErrMsg] = useState('')
     //register hook from apollo client
     const [Register, { loading }] = useMutation(REGISTER);
 
-    const { toast } = useToast()
 
     // form validation with zod
     const formSchema = z.object({
@@ -49,11 +52,7 @@ export default function Signup () {
             const response = await Register ({ variables: { username: values.username, email: values.email, password: values.password } });
             console.log(response)
         } catch (error: any) {
-        toast({
-                variant: "destructive",
-                title: "invalid credentials",
-                description: `${error.message}`,
-            })
+            setErrMsg(error.message)
         }
     }
 
@@ -64,6 +63,11 @@ export default function Signup () {
                     <h1 className="text-center text-2xl font-semibold">
                         SignIn
                     </h1>
+                    <p className="text-sm text-red-400">
+                        {
+                            errMsg
+                        }
+                    </p>
                     <FormField
                     control={form.control}
                     name="username"
@@ -104,8 +108,21 @@ export default function Signup () {
                     type="submit"
                     variant='outline'
                     disabled={loading}>
-                        Submit
+                        {
+                            loading ? 
+                            <PulseLoader size={5} color='#3219F5'/> 
+                            :
+                            'Submit'
+                        }
                     </Button>
+                    <div className="flex justify-center gap-4 items-center">
+                        <p className="text-sm">
+                            Already have an account?
+                        </p>
+                        <Link to='/login' className="text-blue-500">
+                            Signin
+                        </Link>
+                    </div>
                 </form>
             </Form>
         </div>

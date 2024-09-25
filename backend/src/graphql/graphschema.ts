@@ -12,7 +12,7 @@ export const UserType: GraphQLObjectType = new GraphQLObjectType({
         workspacesOwned: { type: new GraphQLList(WorkspaceType) },
         workspacesWorking: { type: new GraphQLList(WorkspaceType) },
         assignedLists: { type: new GraphQLList(ListType) },
-        assignedCard: { type: new GraphQLList(CardType) }
+        assignedCards: { type: new GraphQLList(CardType) }
     })
 });
 

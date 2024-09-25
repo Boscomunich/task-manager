@@ -27,13 +27,23 @@ export async function CreateWorkSpace (args: WorkSpaceType) {
     return workSpace
 }
 
-export async function addWorkSpaceCollaborator (id: string, userId: string) {
-    if (!id || userId) throw new Error ('all fields are required')
+export async function addWorkSpaceCollaborator (id: string, userEmail: string) {
+    if (!id || !userEmail) throw new Error ('all fields are required')
+    console.log(userEmail)
+    const user = await prisma.user.findFirst({
+        where: {
+            email: userEmail
+        }
+    })
+    console.log(user)
+    
+    if (!user) throw new Error ('user with this email doesnt exist')
+
     const updatedWorkspace = await prisma.workspace.update({
         where: { id },
         data: {
             workers: {
-                connect: { id: userId }
+                connect: { id: user.id }
             },
         },
     });

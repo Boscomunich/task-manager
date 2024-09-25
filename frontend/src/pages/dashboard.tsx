@@ -1,7 +1,7 @@
 import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 import { GET_ALL_WORKSPACE } from '@/graphql/query';
 import { useMutation, useQuery } from '@apollo/client';
-import { useEffect } from 'react';
+import {PulseLoader} from "react-spinners";
 import { Button } from '@/components/ui/button';
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -14,7 +14,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { 
+    Form, 
+    FormControl, 
+    FormField, 
+    FormItem, 
+    FormMessage
+ } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { CREATE_WORKSPACE } from '@/graphql/mutation';
 import Card from '@/components/dashboard/card';
@@ -75,6 +81,7 @@ export default function DashBoard() {
         }
     }
 
+    //handles signout
     async function handleSignout () {
         await signOut()
         navigate('/login')
@@ -86,8 +93,8 @@ export default function DashBoard() {
                 <div className="w-[50%] flex justify-start gap-3 items-center">
                     <h1 className="text-2xl sm:xl font-bold">Insync</h1>
                     <Dialog>
-                        <DialogTrigger className="bg-blue-500 text-white py-2 px-3 rounded-md">
-                            Create
+                        <DialogTrigger className="bg-blue-500 text-sm text-white py-1 px-2 rounded-md">
+                            Create New Board
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -122,7 +129,9 @@ export default function DashBoard() {
                                     type="submit" 
                                     variant='outline'
                                     disabled={loading}>
-                                        Create
+                                        {
+                                            loading ? <PulseLoader /> : 'Create'
+                                        }
                                     </Button>
                                 </form>
                                 </Form>
@@ -134,15 +143,11 @@ export default function DashBoard() {
                 <div className='w-[50%] flex justify-end mx-3'>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild className="cursor-pointer">
-                            <div className='h-10 w-10 text-center pt-2 text-white font-semibold rounded-full bg-red-400'>
+                            <div className='h-10 w-10 text-center pt-2 text-white font-semibold rounded-full bg-blue-500'>
                                 {user?.username.slice(0, 2)}
                             </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='start'>
-                            <DropdownMenuItem className="gap-2 text-[12px] cursor-pointer"
-                            >
-                                some
-                            </DropdownMenuItem>
                             <DropdownMenuItem className="gap-2 text-[12px] cursor-pointer"
                             onClick={() => handleSignout()}>
                                 Logout
@@ -159,7 +164,12 @@ export default function DashBoard() {
                     {
                         data && (
                             data.GetAllWorkspace?.map((item: any) => (
-                                <Card key={item.id} {...item}/>
+                                <div 
+                                className='flex justify-start flex-wrap'
+                                key={item.id} 
+                                >
+                                    <Card {...item}/>
+                                </div>
                             ))
                         )
                     }

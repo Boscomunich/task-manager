@@ -93,14 +93,14 @@ export async function updateCard(args: UpdateCardType) {
     return updatedCard;
 }
 
-export async function includeUserToCard (id: string, userEmail: string) {
-    if (!id || !userEmail) throw new Error('Both id and userId are required');
+export async function includeUserToCard (id: string, userId: string) {
+    if (!id || !userId) throw new Error('Both id and userId are required');
     
     const updatedList = await prisma.card.update({
         where: { id },
         data: {
             assignedTo: {
-                connect: { email: userEmail }
+                connect: { id: userId }
             },
         },
     });
@@ -129,4 +129,15 @@ export async function deleteCard (id: string) {
     });
 
     return deletedList;
+}
+
+export async function moveCard (id: string, listId: string) {
+    if (!id || !listId) throw new Error('all fields are required')
+    const card = await prisma.card.update({
+        where: { id },
+        data: {
+            listId
+        }
+    })
+    return card
 }

@@ -14,16 +14,20 @@ import CardDetails from "./carddetails"
 type CardType = {
     id: string
     name: string
-    description: string,
+    description: string
     listId: string
+    workspaceData: any
+    handleDragStart: (e: any, id: string) => void
 }
 
-export default function CardDisplay ({id, name, description, listId}: CardType) {
+//renders the card as seen inside the list items
+export default function CardDisplay ({ id, name, description, listId, workspaceData, handleDragStart }: CardType) {
 
     const [showCardDetails, setShowCardDetails] = useState(false)
 
     const [DeleteCard] = useMutation(DELETE_CARD);
 
+    //handles deletion of card
     async function deleteCard () {
         if (!name) return 
         try {
@@ -40,6 +44,7 @@ export default function CardDisplay ({id, name, description, listId}: CardType) 
     return (
         <div 
         draggable
+        onDragStart={(e) => handleDragStart(e, id)}
         className="w-full flex justify-between h-auto py-2 px-3 bg-slate-200 dark:bg-gray-800 my-2 rounded-sm text-wrap">
             <h1>
                 {name}
@@ -64,9 +69,11 @@ export default function CardDisplay ({id, name, description, listId}: CardType) 
             {
                 showCardDetails && 
                 <CardDetails 
+                workspaceData={workspaceData}
                 id={id}
                 showCardDetails={showCardDetails}
-                setShowCardDetails={setShowCardDetails}/>
+                setShowCardDetails={setShowCardDetails}
+                />
             }
         </div>
     )

@@ -7,13 +7,15 @@ import { CheckListMutations } from './mutations/checklistmutation';
 import { WorkspaceQuery } from './queries/workspacequery';
 import { ListQuery } from './queries/listquery';
 import { CardQuery } from './queries/cardquery';
+import { UserQuery } from './queries/userquery';
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
         ...WorkspaceQuery,
         ...ListQuery,
-        ...CardQuery
+        ...CardQuery,
+        ...UserQuery
     }
 });
 

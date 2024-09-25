@@ -22,11 +22,11 @@ export const WorkspaceMutations: GraphQLFieldConfigMap<any, any> = {
     AddCollaborators: {
         type: WorkspaceType,
         args: {
-            id: { type: GraphQLString},
-            userId: { type: GraphQLString}
+            id: { type: GraphQLID},
+            userEmail: { type: GraphQLString}
         },
         async resolve (parent, args) {
-            return await addWorkSpaceCollaborator(args.id, args.userId)
+            return await addWorkSpaceCollaborator(args.id, args.userEmail)
         }
     },
     RemoveCollaborators: {

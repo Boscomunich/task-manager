@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route } from 'react-router-dom'
+import {BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './components/themeprovider';
 import Home from './pages/home';
 import Layout from './pages/layout';
@@ -9,17 +9,19 @@ import DashBoard from './pages/dashboard';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import ApolloSetup from './apollosetup';
 import Board from './pages/board';
+import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated'
 
 function App() {
   const authHeader = useAuthHeader()
-  console.log(authHeader)
+
+  const isAuthenticated = useIsAuthenticated();
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <ApolloSetup token={authHeader}>
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<Layout/>}>
+            <Route path='/' element={isAuthenticated ? <Navigate to='/dashboard'/> : <Layout/>}>
               <Route index element={<Home/>}/>
             </Route>
             <Route path='/login' element={<Signin/>}/>

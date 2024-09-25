@@ -41,7 +41,7 @@ export const CREATE_LIST = gql`
 `
 export const DELETE_LIST = gql`
     mutation DeleteListMutation ($id: ID! ) {
-        CreateList(id: $id) {
+        DeleteList(id: $id) {
             id
             name
             description
@@ -70,9 +70,20 @@ export const DELETE_CARD = gql`
         }
     }
 `
+export const ADD_COLABORATORS = gql`
+    mutation AddCollaboratorsMutation ($id: ID!, $userEmail: String! ) {
+        AddCollaborators(id: $id, userEmail: $userEmail) {
+            workers{
+                id
+                username
+                email
+            }
+        }
+    }
+`
 export const ADD_USER_TO_CARD = gql`
-    mutation IncludeUserToCardMutation ($id: ID!, $userEmail: String! ) {
-        IncludeUserToCard(id: $id, userEmail: $userEmail) {
+    mutation IncludeUserToCardMutation ($id: ID!, $userId: ID! ) {
+        IncludeUserToCard(id: $id, userId: $userId) {
             assignedTo{
                 id
                 username
@@ -96,6 +107,40 @@ export const UPDATE_CARD = gql`
     mutation UpdateCardMutation ($id: ID!, $listId: ID, $name: String, $description: String, $startDate: String, $endDate: String, $updatedAt: String ) {
         UpdateCard(id: $id, listId: $listId, name: $name, description: $description, startDate: $startDate, endDate: $endDate, updatedAt: $updatedAt) {
             id
+        }
+    }
+`
+export const MOVE_CARD = gql`
+    mutation MoveCardMutation ($id: ID!, $listId: ID!) {
+        MoveCard(id: $id, listId: $listId) {
+            id
+        }
+    }
+`
+export const CREATE_CHECKLIST = gql`
+    mutation CreateCheckListMutation ($name: String!, $cardId: ID!) {
+        CreateCheckList(name: $name, cardId: $cardId) {
+            id
+            name
+            checked
+        }
+    }
+`
+export const UPDATE_CHECKLIST = gql`
+    mutation UpdateCheckListMutation ($id: ID!, $checked: Boolean) {
+        UpdateCheckList(id: $id, checked: $checked) {
+            id
+            name
+            checked
+        }
+    }
+`
+export const DELETE_CHECKLIST = gql`
+    mutation DeleteCheckListMutation ($id: ID!) {
+        DeleteCheckList(id: $id) {
+            id
+            name
+            checked
         }
     }
 `

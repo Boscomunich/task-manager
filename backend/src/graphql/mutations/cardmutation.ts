@@ -1,6 +1,6 @@
 import { GraphQLFieldConfigMap, GraphQLID, GraphQLString } from "graphql";
 import { CardType } from "../graphschema";
-import { createCard, deleteCard, includeUserToCard, removeUserFromCard, updateCard } from "../../controllers/card";
+import { createCard, deleteCard, includeUserToCard, moveCard, removeUserFromCard, updateCard } from "../../controllers/card";
 
 export const CardMutations: GraphQLFieldConfigMap<any, any> = {
     CreateCard: {
@@ -69,10 +69,10 @@ export const CardMutations: GraphQLFieldConfigMap<any, any> = {
         type: CardType,
         args: {
             id: {type: GraphQLID},
-            userEmail: {type: GraphQLString},
+            userId: {type: GraphQLID},
         },
         async resolve (parent, args) {
-            return await includeUserToCard(args.id, args.userEmail)
+            return await includeUserToCard(args.id, args.userId)
         }
     },
     RemoveUserFromCard: {
@@ -92,6 +92,16 @@ export const CardMutations: GraphQLFieldConfigMap<any, any> = {
         },
         async resolve (parent, args) {
             return await deleteCard(args.id)
+        }
+    },
+    MoveCard: {
+        type: CardType,
+        args: {
+            id: {type: GraphQLID},
+            listId: {type: GraphQLID},
+        },
+        async resolve (parent, args) {
+            return await moveCard(args.id, args.listId)
         }
     }
 };

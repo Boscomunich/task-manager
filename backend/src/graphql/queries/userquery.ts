@@ -1,21 +1,22 @@
 import { GraphQLFieldConfigMap, GraphQLID, GraphQLString } from "graphql";
-import { ListType } from "../graphschema";
+import { UserType } from "../graphschema";
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const ListQuery: GraphQLFieldConfigMap<any, any> = {
-    GetList: {
-        type: ListType,
+export const UserQuery: GraphQLFieldConfigMap<any, any> = {
+    GetUser: {
+        type: UserType,
         args: {
             id: {type: GraphQLID}
         },
         async resolve(parent, args) {
-            const list = await prisma.list.findUnique({
+            const list = await prisma.user.findUnique({
                 where: {id: args.id},
                 include: {
-                    cards: true,
-                    workspace: true
+                    workspacesOwned: true,
+                    workspacesWorking: true,
+                    assignedCards: true
                 }
             })
             return list
