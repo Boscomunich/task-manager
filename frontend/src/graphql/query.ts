@@ -10,21 +10,17 @@ export const GET_USER = gql`
                 id
                 name
                 userId
-                workers{
-                    id
-                    username
-                    email
-                }
-                lists{
-                    id
-                    name
-                }
+                createdAt
+                updatedAt
+                description
             }
             workspacesWorking {
                 id
-            }
-            assignedCards{
-                id
+                name
+                userId
+                createdAt
+                updatedAt
+                description
             }
         }
     }

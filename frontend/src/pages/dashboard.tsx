@@ -1,5 +1,5 @@
 import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
-import { GET_ALL_WORKSPACE } from '@/graphql/query';
+import { GET_USER } from '@/graphql/query';
 import { useMutation, useQuery } from '@apollo/client';
 import {PulseLoader} from "react-spinners";
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ import {
     FormField, 
     FormItem, 
     FormMessage
- } from '@/components/ui/form';
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { CREATE_WORKSPACE } from '@/graphql/mutation';
 import Card from '@/components/dashboard/card';
@@ -45,7 +45,7 @@ export default function DashBoard() {
     const [CreateWorkspace, { loading }] = useMutation(CREATE_WORKSPACE);
 
     const user = useAuthUser<User>();
-    const { data } = useQuery(GET_ALL_WORKSPACE, {
+    const { data } = useQuery(GET_USER, {
         variables: { id: user?.id },
     });
 
@@ -74,7 +74,10 @@ export default function DashBoard() {
     //handle form submit event
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            const response = await CreateWorkspace({ variables: { name: values.name, description: values.description, userId: user?.id } })
+            const response = await CreateWorkspace(
+                { variables: { name: values.name, description: values.description, userId: user?.id },
+                refetchQueries: [{ query: GET_USER, variables: { id: user?.id } }]
+            })
             console.log(response)
         } catch (error) {
             console.log(error)
@@ -130,7 +133,7 @@ export default function DashBoard() {
                                     variant='outline'
                                     disabled={loading}>
                                         {
-                                            loading ? <PulseLoader /> : 'Create'
+                                            loading ? <PulseLoader size={5} color='#3219F5'/> : 'Create'
                                         }
                                     </Button>
                                 </form>
@@ -159,19 +162,32 @@ export default function DashBoard() {
             <div className='mt-[50px] lg:px-10 md:px-5 sm:px-3'>
                 <div>
                     <h1 className='text-2xl font-semibold pt-10'>
-                        Recent project
+                        My project
                     </h1>
                     {
-                        data && (
-                            data.GetAllWorkspace?.map((item: any) => (
-                                <div 
-                                className='flex justify-start flex-wrap'
-                                key={item.id} 
-                                >
-                                    <Card {...item}/>
-                                </div>
-                            ))
-                        )
+                        data?.GetUser?.workspacesOwned?.map((item: any) => (
+                            <div 
+                            className='flex justify-start flex-wrap'
+                            key={item.id} 
+                            >
+                                <Card {...item}/>
+                            </div>
+                        ))
+                    }
+                </div>
+                <div>
+                    <h1 className='text-2xl font-semibold pt-10'>
+                        Other project
+                    </h1>
+                    {
+                        data?.GetUser?.workspacesWorking?.map((item: any) => (
+                            <div 
+                            className='flex justify-start flex-wrap'
+                            key={item.id} 
+                            >
+                                <Card {...item}/>
+                            </div>
+                        ))
                     }
                 </div>
             </div>

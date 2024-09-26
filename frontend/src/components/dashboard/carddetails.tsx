@@ -12,7 +12,10 @@ import { Label } from "@/components/ui/label"
 import { GET_CARD, GET_WORKSPACE } from "@/graphql/query"
 import { useMutation, useQuery } from "@apollo/client"
 import { 
+    AlarmClockCheck,
+    AlarmClockOff,
     AlignRight, 
+    CalendarClock, 
     CalendarIcon, 
     Computer, 
     FilePenLine, 
@@ -47,6 +50,9 @@ type CardPropsType = {
     checkList: any[]
     assignedTo: string[]
     description: string
+    startDate: string
+    endDate: string
+    updatedAt: string
 }
 
 function Card (props: CardPropsType) {
@@ -174,51 +180,76 @@ function Card (props: CardPropsType) {
 
     return (
         <div className="flex justify-center sm:flex-col">
-            <div className="w-[70%] sm:w-full flex flex-col gap-3">
-                <div className="flex justify-start gap-2 items-center my-2">
-                    <Computer />
-                    <h1>{props.name}</h1>
-                </div>
-                <div className="my-2">
-                    <p className="text-[16px] font-bold">Members</p>
-                    {
-                        props.assignedTo?.map((user: any) => (
-                            <div key={user.id}>{user.email}</div>
-                        ))
-                    }
-                </div>
-                <div className="my-2">
-                    <div className="flex justify-start gap-2">
-                        <AlignRight />
-                        <p className="text-[16px] font-bold">Description</p>
+            <div className="w-[70%] sm:w-full flex justify-between items-start">
+                <div className="flex flex-col gap-3">
+                    <div className="flex justify-start gap-2 items-center my-2">
+                        <Computer />
+                        <h1>{props.name}</h1>
                     </div>
-                    <div>{props.description}</div>
-                </div>
-                <div>
-                    {
-                        props.checkList && (
-                            <p className="text-[16px] font-bold">Checklist</p>
-                        )
-                    }
-                    {
-                        props.checkList?.map((item: any) => (
-                            <div className="flex flex-col justify-start items-start gap-4"
-                            key={item.id}>
-                                <div className="flex items-center space-x-2 py-1">
-                                <Checkbox 
-                                id={item.name} 
-                                checked={item.checked}
-                                onClick={() => updateCheckList(item.id, !item.checked)}/>
-                                <label
-                                    htmlFor={item.name}
-                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
-                                    {item.name}
-                                </label>
+                    <div className="my-2">
+                        <p className="text-[16px] font-bold">Members</p>
+                        {
+                            props.assignedTo?.map((user: any) => (
+                                <div key={user.id}>{user.email}</div>
+                            ))
+                        }
+                    </div>
+                    <div className="my-2">
+                        <div className="flex justify-start gap-2">
+                            <AlignRight />
+                            <p className="text-[16px] font-bold">Description</p>
+                        </div>
+                        <div>{props.description}</div>
+                    </div>
+                    <div>
+                        {
+                            props.checkList && (
+                                <p className="text-[16px] font-bold">Checklist</p>
+                            )
+                        }
+                        {
+                            props.checkList?.map((item: any) => (
+                                <div className="flex flex-col justify-start items-start gap-4"
+                                key={item.id}>
+                                    <div className="flex items-center space-x-2 py-1">
+                                    <Checkbox 
+                                    id={item.name} 
+                                    checked={item.checked}
+                                    onClick={() => updateCheckList(item.id, !item.checked)}/>
+                                    <label
+                                        htmlFor={item.name}
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                        {item.name}
+                                    </label>
+                                    </div>
                                 </div>
-                            </div>
-                        ))
-                    }
+                            ))
+                        }
+                    </div>
+                </div>
+                <div className="flex flex-col lg:mr-10 md:mr-10">
+                    <div className="my-2">
+                        <div className="flex justify-start gap-2">
+                            <AlarmClockCheck />
+                            <p className="text-[16px] font-bold">Start date</p>
+                        </div>
+                        <div>{new Date(Number(props.startDate)).toLocaleString()}</div>
+                    </div>
+                    <div className="my-2">
+                        <div className="flex justify-start gap-2">
+                            <AlarmClockOff />
+                            <p className="text-[16px] font-bold">End date</p>
+                        </div>
+                        <div>{new Date(Number(props.endDate)).toLocaleString()}</div>
+                    </div>
+                    <div className="my-2">
+                        <div className="flex justify-start gap-2">
+                            <CalendarClock />
+                            <p className="text-[16px] font-bold">Last updated</p>
+                        </div>
+                        <div>{new Date(Number(props.updatedAt)).toLocaleString()}</div>
+                    </div>
                 </div>
             </div>
             <div className="w-[30%] sm:w-full flex flex-col gap-4">
