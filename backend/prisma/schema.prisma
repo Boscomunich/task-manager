@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id                String      @id
-  email             String      @unique
+  id                String         @id
+  email             String         @unique
   username          String
   password          String?
-  verified          Boolean     @default(false)
-  workspacesOwned   Workspace[] @relation("Owner")
-  workspacesWorking Workspace[] @relation("Worker")
-  assignedLists     List[]      @relation("UserLists")
-  assignedCards     Card[]      @relation("UserCards")
+  verified          Boolean        @default(false)
+  workspacesOwned   Workspace[]    @relation("Owner")
+  workspacesWorking Workspace[]    @relation("Worker")
+  assignedLists     List[]         @relation("UserLists")
+  assignedCards     Card[]         @relation("UserCards")
+  notification      Notification[]
 }
 
 model Workspace {
@@ -37,7 +38,7 @@ model List {
   description String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now())
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId String
   cards       Card[]
   assignedTo  User[]    @relation("UserLists")
@@ -51,7 +52,7 @@ model Card {
   endDate     DateTime?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @default(now())
-  list        List        @relation(fields: [listId], references: [id])
+  list        List        @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId      String
   checkList   CheckList[]
   assignedTo  User[]      @relation("UserCards")
@@ -61,6 +62,17 @@ model CheckList {
   id      String  @id
   name    String
   checked Boolean @default(false)
-  card    Card    @relation(fields: [cardId], references: [id])
+  card    Card    @relation(fields: [cardId], references: [id], onDelete: Cascade)
   cardId  String
+}
+
+model Notification {
+  id        String   @id
+  message   String
+  type      String
+  projectId String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  owner     User     @relation(fields: [userId], references: [id])
+  userId    String
 }

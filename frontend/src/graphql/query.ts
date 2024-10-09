@@ -22,6 +22,14 @@ export const GET_USER = gql`
                 updatedAt
                 description
             }
+            notification {
+                id
+                type
+                projectId
+                read
+                message
+                createdAt
+            }
         }
     }
 `
@@ -108,6 +116,18 @@ export const GET_CARD = gql`
                 name
                 checked
             }
+        }
+    }
+`
+export const GET_NOTIFICATION = gql`
+    query GetNotificationQuery ($userId: ID!) {
+        GetNotification (userId: $UserId) {
+            id
+            type
+            projectId
+            read
+            message
+            createdAt
         }
     }
 `

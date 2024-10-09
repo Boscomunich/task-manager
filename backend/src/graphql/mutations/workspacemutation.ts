@@ -1,6 +1,6 @@
 import { GraphQLFieldConfigMap, GraphQLID, GraphQLString } from "graphql";
-import { WorkspaceType } from "../graphschema";
-import { addWorkSpaceCollaborator, CreateWorkSpace, deleteWorkspace, removeWorkSpaceCollaborator } from "../../controllers/workspace";
+import { WorkspaceType, NotificationType } from "../graphschema";
+import { acceptInvite, addWorkSpaceCollaborator, CreateWorkSpace, deleteWorkspace, removeWorkSpaceCollaborator } from "../../controllers/workspace";
 
 export const WorkspaceMutations: GraphQLFieldConfigMap<any, any> = {
     CreateWorkspace: {
@@ -23,10 +23,12 @@ export const WorkspaceMutations: GraphQLFieldConfigMap<any, any> = {
         type: WorkspaceType,
         args: {
             id: { type: GraphQLID},
+            email: { type: GraphQLString},
+            ownerId: { type: GraphQLID},
             userEmail: { type: GraphQLString}
         },
         async resolve (parent, args) {
-            return await addWorkSpaceCollaborator(args.id, args.userEmail)
+            return await addWorkSpaceCollaborator(args.id, args.email, args.ownerId, args.userEmail)
         }
     },
     RemoveCollaborators: {
@@ -40,6 +42,18 @@ export const WorkspaceMutations: GraphQLFieldConfigMap<any, any> = {
             return await removeWorkSpaceCollaborator(args.owner, args.id, args.userId)
         }
     },
+
+    AcceptInvite: {
+        type: WorkspaceType,
+        args: {
+            projectId: {type: GraphQLString},
+            userId: {type: GraphQLString}
+        },
+        async resolve (parent, args) {
+            return await acceptInvite(args.projectId, args.userId)
+        }
+    },
+
     DeleteWorkspace: {
         type: WorkspaceType,
         args: {

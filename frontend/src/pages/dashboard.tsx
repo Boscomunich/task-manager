@@ -22,7 +22,7 @@ import {
     FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { CREATE_WORKSPACE } from '@/graphql/mutation';
+import { ACCEPT_INVITE, CREATE_WORKSPACE, DELETE_NOTIFICATION } from '@/graphql/mutation';
 import Card from '@/components/dashboard/card';
 import { 
         DropdownMenu, 
@@ -32,6 +32,11 @@ import {
     } from '@/components/ui/dropdown-menu';
 import useSignOut from 'react-auth-kit/hooks/useSignOut';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion'
+import { cn } from '@/lib/utils';
+import { useEffect, useState } from 'react';
+import { Bell, Trash2 } from 'lucide-react';
+import { useToasts } from 'react-toast-notifications';
 
 type User = {
     id: string
@@ -40,14 +45,143 @@ type User = {
     verified: boolean
 }
 
+type Notification = {
+    type: string,
+    message: string,
+    id: string,
+    projectId: string,
+    createdAt: string
+    read: boolean
+}
+
+const NotificationItem = ({ type, message, id, projectId, createdAt, read }: Notification) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const user = useAuthUser<User>();
+
+    const { addToast } = useToasts();
+
+    const notify = (message: string, appearance: any) => {
+        addToast(message, { appearance, autoDismiss: true });
+    };
+
+    const [AcceptInvite, { loading }] = useMutation(ACCEPT_INVITE);
+    const [DeleteNotification, { loading: loading2 }] = useMutation(DELETE_NOTIFICATION);
+
+
+    // accept invite and delete notification
+    async function acceptRequest () {
+        try {
+            const response = await AcceptInvite(
+                { variables: { projectId, userId: user?.id } }
+            )
+            if (response.data) {
+                await DeleteNotification ({
+                    variables: { id },
+                    refetchQueries: [{ query: GET_USER, variables: {id: user?.id}}]
+                })
+            }
+            console.log(response)
+            notify('invite accepted', 'success')
+        } catch (error: any) {
+            console.log(error)
+            notify(error.message, 'error')
+        }
+    }
+
+    //reject invitation and delete request
+    async function rejectRequest () {
+        try {
+            const response = await DeleteNotification ({
+                variables: { id },
+                refetchQueries: [{ query: GET_USER, variables: {id: user?.id}}]
+            })
+            console.log(response)
+            notify('invite rejected', 'success')
+        } catch (error: any) {
+            console.log(error)
+            notify(error.message, 'error')
+        }
+    }
+
+    //deletes notification
+    async function deleteNotification () {
+        try {
+            const response = await DeleteNotification(
+                { variables: { id },
+                refetchQueries: [{ query: GET_USER, variables: { id: user?.id } }]
+            })
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    } 
+
+    return (
+        <div className={cn ("border-rare border shadow-md rounded-md w-full cursor-pointer p-2")}>
+            <div className='flex items-center justify-between h-5'
+            >
+                <div
+                className={cn ("text-xl font-medium w-[80%]", read && 'text-slate-500')}
+                onClick={() => setIsOpen(!isOpen)}>
+                    {type}
+                </div>
+                <Button 
+                className='text-[10px] p-1 mt-1 bg-transparent'
+                onClick={() => deleteNotification()}
+                disabled={loading2}>
+                    <Trash2 size={20}/>
+                </Button>
+            </div>
+            <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
+                transition={{ duration: 0.5 }}
+                className="overflow-hidden text-[12px] p-1"
+            >
+                <p className="mt-2">{message}</p>
+            </motion.div>
+            {
+                projectId && (
+                    <div className='flex text-[12px] justify-center gap-2'>
+                        <Button 
+                        className='py-1 dark:bg-gray-900 w-[50%] text-green-500'
+                        onClick={() => acceptRequest()}
+                        disabled={loading}>
+                            accept
+                        </Button>
+                        <Button 
+                        className='py-1 w-[50%] text-red-500 dark:bg-gray-600'
+                        onClick={() => rejectRequest()}
+                        disabled={loading2}>
+                            reject
+                        </Button>
+                    </div>
+                )
+            }
+        </div>
+    );
+};
+
 export default function DashBoard() {
 
     const [CreateWorkspace, { loading }] = useMutation(CREATE_WORKSPACE);
+    const [newMsg, setNewMsg] = useState(null)
+    const [active, setActive] = useState(false)
 
     const user = useAuthUser<User>();
-    const { data } = useQuery(GET_USER, {
+
+    const { data, error } = useQuery(GET_USER, {
         variables: { id: user?.id },
     });
+
+
+    useEffect (() => {
+        const unreadCount = data?.GetUser?.notification?.filter((item: any) => !item.read)?.length;
+        console.log(unreadCount)
+        setNewMsg(unreadCount)
+        console.log(data)
+    }, [ data ])
 
     const signOut = useSignOut()
     const navigate = useNavigate()
@@ -144,6 +278,34 @@ export default function DashBoard() {
                     </Dialog>
                 </div>
                 <div className='w-[50%] flex justify-end mx-3'>
+                    <div 
+                    onClick={() => setActive(!active)}
+                    className='relative px-4 py-2 text-neutral-600 cursor-pointer'
+                    >
+                        <Bell />
+                        <div className='absolute z-20 top-0 font-bold right-4 text-green-500'>
+                            {newMsg}
+                        </div>
+                    </div>
+                    {
+                        active && (
+                            <motion.div 
+                            initial={{height: 0, opacity: 0}}
+                            animate={active ? {height: 'auto', opacity: 1}: {height: 0, opacity: 0}}
+                            transition={{duration: 0.2}}
+                            className='absolute top-[70%] right-10 w-[200px] p-2 dark:bg-gray-900 bg-slate-400 rounded-lg flex flex-col gap-3 overflow-hidden'>
+                            {
+                                data?.GetUser?.notification?.length > 0 ? (
+                                    data.GetUser.notification.map((item: Notification) => (
+                                        <NotificationItem key={item.id} {...item} />
+                                    ))
+                                ) : (
+                                    <div>Empty</div>
+                                )
+                            }
+                            </motion.div>
+                        )
+                    }
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild className="cursor-pointer">
                             <div className='h-10 w-10 text-center pt-2 text-white font-semibold rounded-full bg-blue-500'>
@@ -164,16 +326,13 @@ export default function DashBoard() {
                     <h1 className='text-2xl font-semibold pt-10'>
                         My project
                     </h1>
+                    <div className='flex justify-start flex-wrap gap-3'>
                     {
                         data?.GetUser?.workspacesOwned?.map((item: any) => (
-                            <div 
-                            className='flex justify-start flex-wrap'
-                            key={item.id} 
-                            >
-                                <Card {...item}/>
-                            </div>
+                                <Card {...item} key={item.id} />
                         ))
                     }
+                    </div>
                 </div>
                 <div>
                     <h1 className='text-2xl font-semibold pt-10'>

@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import crypto  from 'crypto'
+import { sendNotification } from '../utils/notification'
 
 type WorkSpaceType = {
     name: string,
@@ -21,29 +22,57 @@ export async function CreateWorkSpace (args: WorkSpaceType) {
             userId
         }, 
         include: {
-            owner: true, 
+            owner: true,
         },
     })
     return workSpace
 }
 
-export async function addWorkSpaceCollaborator (id: string, userEmail: string) {
-    if (!id || !userEmail) throw new Error ('all fields are required')
-    console.log(userEmail)
+export async function addWorkSpaceCollaborator (id: string, email: string, ownerId: string,  userEmail: string) {
+    if (!id || !email || !userEmail) throw new Error ('all fields are required')
+
+    userEmail = userEmail.trim();
+
+    const workSpace = await prisma.workspace.findUnique({
+        where: {id: id},
+    })
+
+    if (workSpace?.userId != ownerId) throw new Error ('non owner cannot invite members')
+
     const user = await prisma.user.findFirst({
         where: {
             email: userEmail
         }
     })
-    console.log(user)
-    
+
     if (!user) throw new Error ('user with this email doesnt exist')
 
+    const userExistsInWorkspace = await prisma.workspace.findFirst({
+        where: {
+            id,
+            workers: {
+            some: {
+                id:user.id
+            }
+            }
+        }
+    });
+
+    if (userExistsInWorkspace) throw new Error ('user already added')
+    
+
+    const message = `a user with this emai ${email} has invited  you to join their board; please reject if you don’t know this user`
+
+    const notification = await sendNotification(message, 'invitation', user.id, id)
+    return notification
+}
+
+export async function acceptInvite (projectId: string, userId: string) {
     const updatedWorkspace = await prisma.workspace.update({
-        where: { id },
+        where: { id: projectId },
         data: {
             workers: {
-                connect: { id: user.id }
+                connect: { id: userId }
             },
         },
     });

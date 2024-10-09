@@ -10,6 +10,7 @@ import { DELETE_CARD } from "@/graphql/mutation"
 import { GET_LIST } from "@/graphql/query"
 import { useState } from "react"
 import CardDetails from "./carddetails"
+import { motion } from 'framer-motion'
 
 type CardType = {
     id: string
@@ -42,7 +43,8 @@ export default function CardDisplay ({ id, name, description, listId, workspaceD
     }
 
     return (
-        <div 
+        <motion.div 
+        layout
         draggable
         onDragStart={(e) => handleDragStart(e, id)}
         className="w-full flex justify-between h-auto py-2 px-3 bg-slate-200 dark:bg-gray-800 my-2 rounded-sm text-wrap">
@@ -75,6 +77,6 @@ export default function CardDisplay ({ id, name, description, listId, workspaceD
                 setShowCardDetails={setShowCardDetails}
                 />
             }
-        </div>
+        </motion.div>
     )
 }

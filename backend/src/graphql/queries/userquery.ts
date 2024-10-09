@@ -16,7 +16,8 @@ export const UserQuery: GraphQLFieldConfigMap<any, any> = {
                 include: {
                     workspacesOwned: true,
                     workspacesWorking: true,
-                    assignedCards: true
+                    assignedCards: true,
+                    notification: true
                 }
             })
             return list

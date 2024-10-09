@@ -71,8 +71,19 @@ export const DELETE_CARD = gql`
     }
 `
 export const ADD_COLABORATORS = gql`
-    mutation AddCollaboratorsMutation ($id: ID!, $userEmail: String! ) {
-        AddCollaborators(id: $id, userEmail: $userEmail) {
+    mutation AddCollaboratorsMutation ($id: ID!, $email: String!, $ownerId: ID!, $userEmail: String! ) {
+        AddCollaborators(id: $id, email: $email, ownerId: $ownerId, userEmail: $userEmail) {
+            workers{
+                id
+                username
+                email
+            }
+        }
+    }
+`
+export const ACCEPT_INVITE = gql`
+    mutation AcceptInvite ($projectId: String!, $userId: String! ) {
+        AcceptInvite(projectId: $projectId, userId: $userId) {
             workers{
                 id
                 username
@@ -141,6 +152,13 @@ export const DELETE_CHECKLIST = gql`
             id
             name
             checked
+        }
+    }
+`
+export const DELETE_NOTIFICATION = gql`
+    mutation DeleteNotification ($id: ID!) {
+        DeleteNotification (id: $id) {
+            id
         }
     }
 `

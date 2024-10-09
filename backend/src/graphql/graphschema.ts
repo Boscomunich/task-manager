@@ -12,7 +12,8 @@ export const UserType: GraphQLObjectType = new GraphQLObjectType({
         workspacesOwned: { type: new GraphQLList(WorkspaceType) },
         workspacesWorking: { type: new GraphQLList(WorkspaceType) },
         assignedLists: { type: new GraphQLList(ListType) },
-        assignedCards: { type: new GraphQLList(CardType) }
+        assignedCards: { type: new GraphQLList(CardType) },
+        notification: { type: new GraphQLList(NotificationType) }
     })
 });
 
@@ -27,7 +28,7 @@ export const WorkspaceType: GraphQLObjectType = new GraphQLObjectType({
         owner: { type: UserType },
         userId: {type: GraphQLString},
         workers: { type: new GraphQLList(UserType) },
-        lists: { type: new GraphQLList(ListType) }
+        lists: { type: new GraphQLList(ListType) },
     })
 });
 
@@ -73,3 +74,16 @@ export const CheckListType: GraphQLObjectType = new GraphQLObjectType({
         cardId: { type: GraphQLString }
     })
 });
+
+export const NotificationType: GraphQLObjectType = new GraphQLObjectType({
+    name: 'Notification',
+    fields: () => ({
+        id: { type: GraphQLID },
+        message: { type: GraphQLString},
+        type: { type: GraphQLString},
+        projectId: { type: GraphQLString},
+        read: {type: GraphQLBoolean},
+        createdAt: { type: GraphQLString},
+        userId: { type: GraphQLString}
+    })
+})

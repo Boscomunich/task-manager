@@ -1,13 +1,14 @@
-import { EllipsisVertical, Plus, Trash2 } from "lucide-react";
+import { EllipsisVertical, FilePlus, Plus, Trash2 } from "lucide-react";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GET_LIST, GET_WORKSPACE } from "@/graphql/query";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_CARD, DELETE_LIST, MOVE_CARD } from "@/graphql/mutation";
 import CardDisplay from "./carddisplay";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { motion } from 'framer-motion'
 
 type ListType = {
     id: string
@@ -16,7 +17,7 @@ type ListType = {
     workspaceData: any
 }
 
-export default function ListDisplay ({id, name, description, workspaceData}: ListType) {
+export default function ListDisplay ({id, name, workspaceData}: ListType) {
 
     const [addingCard, setAddingCard] = useState(false)
     const [cardName, setCardName] = useState('')
@@ -96,7 +97,7 @@ export default function ListDisplay ({id, name, description, workspaceData}: Lis
 
     return (
         <div 
-        className="w-[300px] whitespace-nowrap rounded-md h-auto max-h-[95%] border p-2 mb-2"
+        className="w-[300px] isolate whitespace-nowrap rounded-md max-h-[95%] border p-2 mb-2"
         onDrop={(event) => moveCard(event)}
         onDragOver={(event) => handleDragOver(event)}>
         <ScrollArea className="w-full h-full">
@@ -123,43 +124,41 @@ export default function ListDisplay ({id, name, description, workspaceData}: Lis
                 }
             </div>
             <div>
+            
             {
-                !addingCard ? 
-                <Button className='w-[200px] bg-blue-500 rounded-sm' 
-                onClick={() => setAddingCard(true)}>
-                    <div className="flex items-center justify-start gap-2">
-                        <Plus className="text-white" />
-                        <p>Add another card</p>
+                addingCard ?
+                    <motion.div layout>
+                    <textarea
+                        onChange={(e) => setCardName(e.target.value)}
+                        autoFocus
+                        placeholder="Add new task..."
+                        className="w-full rounded border border-blue-500 bg-gray-900 p-3 text-sm text-neutral-50 placeholder-violet-300 focus:outline-0"
+                    />
+                    <div className="mt-1.5 flex items-center justify-end gap-1.5">
+                        <button
+                        onClick={() => setAddingCard(false)}
+                        className="px-3 py-1.5 text-xs text-neutral-500 transition-colors"
+                        >
+                        Close
+                        </button>
+                        <button
+                        onClick={() => createCard()}
+                        className="flex items-center gap-1.5 rounded bg-neutral-50 px-3 py-1.5 text-xs text-neutral-950 transition-colors hover:bg-neutral-300"
+                        >
+                        <span>Add</span>
+                        <Plus className="h-4 w-4"/>
+                        </button>
                     </div>
-                </Button> :
-                <div className="space-y-4 border shadow-xl py-2 px-2 w-[200px] bg-blue-400">
-                    <Input 
-                    placeholder="name"
-                    className="h-7 rounded-sm"
-                    onChange={(e) => setCardName(e.target.value)}/>
-                    <Input 
-                    placeholder="description" 
-                    className="h-7 rounded-sm"
-                    onChange={(e) => setCardDescription(e.target.value)}/>
-                    <div className="flex justify-between items-center">
-                        <Button 
-                        variant='outline'
-                        size='sm'
-                        className="w-[80px] text-center"
-                        disabled={loading}
-                        onClick={() => createCard()}>
-                            add
-                        </Button>
-                        <Button 
-                        variant='destructive'
-                        size='sm'
-                        className="w-[80px] text-center"
-                        onClick={() => setAddingCard(false)}>
-                            close
-                        </Button>
-                    </div>
-                </div>
-            }
+                    </motion.div> : 
+                    <motion.button
+                    layout
+                    onClick={() => setAddingCard(true)}
+                    className="flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-neutral-500 transition-colors"
+                    >
+                    <span>Add card</span>
+                    <Plus className="h-4 w-4"/>
+                    </motion.button>
+                }
             </div>
             <ScrollBar orientation="vertical" />
         </ScrollArea>

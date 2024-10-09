@@ -8,6 +8,8 @@ import { WorkspaceQuery } from './queries/workspacequery';
 import { ListQuery } from './queries/listquery';
 import { CardQuery } from './queries/cardquery';
 import { UserQuery } from './queries/userquery';
+import { NotificationMutation } from './mutations/notificationmutation';
+import { NotificationQuery } from './queries/notificationquery';
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
@@ -15,7 +17,8 @@ const RootQuery = new GraphQLObjectType({
         ...WorkspaceQuery,
         ...ListQuery,
         ...CardQuery,
-        ...UserQuery
+        ...UserQuery,
+        ...NotificationQuery
     }
 });
 
@@ -26,7 +29,8 @@ const RootMutation: GraphQLObjectType = new GraphQLObjectType ({
         ...WorkspaceMutations,
         ...ListMutations,
         ...CardMutations,
-        ...CheckListMutations
+        ...CheckListMutations,
+        ...NotificationMutation
     }
 })
 

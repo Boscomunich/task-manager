@@ -252,8 +252,8 @@ function Card (props: CardPropsType) {
                     </div>
                 </div>
             </div>
-            <div className="w-[30%] sm:w-full flex flex-col gap-4">
-                <p>Add to card</p>
+            <div className="w-[30%] sm:w-full flex-wrap flex lg:flex-col gap-4">
+                <p className="sm:w-full sm:pt-5">Add to card</p>
 
                 {/** used to add members to your card*/}
                 <Popover>
@@ -464,7 +464,7 @@ export default function CardDetails ({id, showCardDetails, setShowCardDetails, w
             <DialogTrigger asChild>
             <Button variant="outline">Edit Profile</Button>
             </DialogTrigger>
-            <DialogContent className="w-[750px] min-w-[80vw] h-auto">
+            <DialogContent className="w-[750px] min-w-[80vw] h-[85vh] overflow-scroll">
             <DialogHeader>
                 <DialogTitle>Edit Card</DialogTitle>
                 <DialogDescription>

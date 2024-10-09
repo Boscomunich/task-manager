@@ -14,6 +14,16 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { Label } from "@radix-ui/react-dropdown-menu";
+import { motion } from 'framer-motion'
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { useToasts } from 'react-toast-notifications';
+
+type User = {
+    id: string
+    username: string
+    email: string
+    verified: boolean
+}
 
 export default function Board () {
     const [addingList, setAddingList] = useState(false)
@@ -21,7 +31,15 @@ export default function Board () {
     const [description, setDescription] = useState('')
     const [email, setEmail] = useState('')
 
+    const { addToast } = useToasts();
+
+    const user = useAuthUser<User>();
+
     const params = useParams()
+
+    const notify = (message: string, appearance: any) => {
+        addToast(message, { appearance, autoDismiss: true });
+    };
 
     const [CreateList, { loading }] = useMutation(CREATE_LIST);
     const [AddCollaborators, { loading: loading2 }] = useMutation(ADD_COLABORATORS);
@@ -48,10 +66,12 @@ export default function Board () {
     async function addMember () {
         if (!email) return
         try {
-            const response = await AddCollaborators({ variables: { id: params.id, userEmail: email } })
+            const response = await AddCollaborators({ variables: { id: params.id, email: user?.email, ownerId: user?.id, userEmail: email } })
             console.log(response)
+            if (response.data) notify('user added', 'success')
         } catch (error: any) {
             console.log(error.message)
+            notify(error.message, 'error')
         }
     }
 
@@ -79,15 +99,15 @@ export default function Board () {
                                     <h4 className="font-medium leading-none">Add members</h4>
                                 </div>
                                 <div className="grid gap-2">
-                                    <div className="grid grid-cols-3 items-center">
+                                    <div className="grid grid-cols-5 items-center">
                                     <Label >Email</Label>
                                     <Input
                                         id="width"
-                                        className="col-span-2 h-8"
+                                        className="col-span-4 h-8"
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
                                     </div>
-                                    <Button size='sm' className="w-[50px] gap-2 text-white bg-blue-500 hover:bg-blue-500"
+                                    <Button size='sm' className="w-[100px] gap-2 text-white bg-blue-500 hover:bg-blue-500"
                                     disabled={loading2}
                                     onClick={() => addMember()}>
                                     Add
@@ -107,41 +127,40 @@ export default function Board () {
                     )
                     }
                     {
-                        !addingList ? 
-                        <Button className='w-[200px] bg-blue-500 rounded-sm' 
-                        onClick={() => setAddingList(true)}>
-                            <div className="flex items-center justify-start gap-2">
-                                <Plus className="text-white" />
-                                <p>Add another list</p>
-                            </div>
-                        </Button> :
-                        <div className="space-y-4 border shadow-xl py-2 px-2 w-[200px] bg-blue-400">
-                            <Input 
-                            placeholder="name"
-                            className="h-7 rounded-sm"
-                            onChange={(e) => setName(e.target.value)}/>
-                            <Input 
-                            placeholder="description" 
-                            className="h-7 rounded-sm"
-                            onChange={(e) => setDescription(e.target.value)}/>
-                            <div className="flex justify-between items-center">
-                                <Button 
-                                variant='outline'
-                                size='sm'
-                                className="w-[80px] text-center"
-                                disabled={loading}
-                                onClick={() => createList()}>
-                                    add
-                                </Button>
-                                <Button 
-                                variant='destructive'
-                                size='sm'
-                                className="w-[80px] text-center"
-                                onClick={() => setAddingList(false)}>
-                                    close
-                                </Button>
-                            </div>
+                    addingList ?
+                        <motion.div
+                        layout
+                        className="w-[200px]">
+                        <textarea
+                            onChange={(e) => setName(e.target.value)}
+                            autoFocus
+                            placeholder="Add new List..."
+                            className="w-full rounded border border-blue-500 bg-gray-900 p-3 text-sm text-neutral-50 placeholder-violet-300 focus:outline-0"
+                        />
+                        <div className="mt-1.5 flex items-center justify-end gap-1.5">
+                            <button
+                            onClick={() => setAddingList(false)}
+                            className="px-3 py-1.5 text-xs text-neutral-500 transition-colors"
+                            >
+                            Close
+                            </button>
+                            <button
+                            onClick={() => createList()}
+                            className="flex items-center gap-1.5 rounded bg-neutral-50 px-3 py-1.5 text-xs text-neutral-950 transition-colors hover:bg-neutral-300"
+                            >
+                            <span>Add</span>
+                            <Plus className="h-4 w-4"/>
+                            </button>
                         </div>
+                        </motion.div> : 
+                        <motion.button
+                        layout
+                        onClick={() => setAddingList(true)}
+                        className="flex w-[200px] items-start gap-1.5 px-3 py-1.5 text-xs text-neutral-500 transition-colors"
+                        >
+                            <span>Add List</span>
+                            <Plus className="h-4 w-4"/>
+                        </motion.button>
                     }
                 </div>
                 <ScrollBar orientation="horizontal" />

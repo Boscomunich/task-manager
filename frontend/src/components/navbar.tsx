@@ -15,7 +15,7 @@ import {
 export default function NavBar () {
     return (
         <div className="flex justify-between items-center h-[77px] gap-4 w-screen pl-4 py-3 bg-transparent fixed top-0 backdrop-blur-3xl z-20">
-            <div className="w-[50%]">
+            <div className="w-[50%] flex lg:justify-center">
                 <h1 className="text-4xl sm:xl font-bold">Insync</h1>
             </div>
             <div className="w-[50%] flex gap-2 justify-center md:hidden sm:hidden">
@@ -31,7 +31,7 @@ export default function NavBar () {
                 </Link>
                 <ModeToggle/>
             </div>
-            <div className="lg:hidden px-3">
+            <div className="lg:hidden px-3 mr-5">
                 <Sheet>
                     <SheetTrigger>
                         <SquareMenu />

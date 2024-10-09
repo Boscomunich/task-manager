@@ -1,9 +1,16 @@
+import Features from "@/components/landingpage/features"
 import Hero from "@/components/landingpage/hero"
+import PAGE from "@/components/landingpage/pager"
+import Perks from "@/components/landingpage/perks"
+import WorkFlow from "@/components/landingpage/workflow"
 
 export default function Home () {
     return (
-        <div className="mx-5">
+        <div className="lg:mx-16 mx-5">
             <Hero/>
+            <Perks/>
+            <Features/>
+            <WorkFlow/>
         </div>
     )
 }
