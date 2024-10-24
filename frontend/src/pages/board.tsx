@@ -28,7 +28,6 @@ type User = {
 export default function Board () {
     const [addingList, setAddingList] = useState(false)
     const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
     const [email, setEmail] = useState('')
 
     const { addToast } = useToasts();
@@ -41,9 +40,9 @@ export default function Board () {
         addToast(message, { appearance, autoDismiss: true });
     };
 
-    const [CreateList, { loading }] = useMutation(CREATE_LIST);
-    const [AddCollaborators, { loading: loading2 }] = useMutation(ADD_COLABORATORS);
-    const [RemoveCollaborators, { loading: loading3 }] = useMutation(REMOVE_COLABORATORS);
+    const [ CreateList ] = useMutation(CREATE_LIST);
+    const [ AddCollaborators, { loading: loading2 }] = useMutation(ADD_COLABORATORS);
+    const [ RemoveCollaborators ] = useMutation(REMOVE_COLABORATORS);
 
     const { data } = useQuery(GET_WORKSPACE, {
         variables: { id: params.id },
@@ -54,7 +53,7 @@ export default function Board () {
         if (!name) return
         try {
             const response = await CreateList({ 
-                variables: { name, description, workspaceId: params.id },
+                variables: { name, workspaceId: params.id },
                 refetchQueries: [{ query: GET_WORKSPACE, variables: { id: params.id } }]
             })
             console.log(response)

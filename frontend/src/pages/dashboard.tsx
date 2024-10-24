@@ -54,7 +54,7 @@ type Notification = {
     read: boolean
 }
 
-const NotificationItem = ({ type, message, id, projectId, createdAt, read }: Notification) => {
+const NotificationItem = ({ type, message, id, projectId, read }: Notification) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const user = useAuthUser<User>();
@@ -66,8 +66,8 @@ const NotificationItem = ({ type, message, id, projectId, createdAt, read }: Not
     };
 
     const [AcceptInvite, { loading }] = useMutation(ACCEPT_INVITE);
-    const [DeleteNotification, { loading: loading2 }] = useMutation(DELETE_NOTIFICATION);
-    const [UpdateNotification, { loading: loading3 }] = useMutation(UPDATE_NOTIFICATION);
+    const [ DeleteNotification, { loading: loading2 } ] = useMutation(DELETE_NOTIFICATION);
+    const [ UpdateNotification ] = useMutation(UPDATE_NOTIFICATION);
 
 
     // accept invite and delete notification
@@ -188,7 +188,7 @@ export default function DashBoard() {
 
     const user = useAuthUser<User>();
 
-    const { data, error } = useQuery(GET_USER, {
+    const { data } = useQuery(GET_USER, {
         variables: { id: user?.id },
     });
 

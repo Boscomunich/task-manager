@@ -1,7 +1,7 @@
 import boardImage from '@/assets/features/featureimage.png'
 import listImage from '@/assets/features/list.png'
 import cardImage from '@/assets/features/card.png'
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import clsx from 'clsx';
 
@@ -26,8 +26,6 @@ const features = [
     },
 ]
 
-const ONE_SECOND = 1000;
-const AUTO_DELAY = ONE_SECOND * 10;
 const DRAG_BUFFER = 50;
 
 const SPRING_OPTIONS = {

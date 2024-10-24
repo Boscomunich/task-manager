@@ -39,7 +39,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { ADD_USER_TO_CARD, CREATE_CARD, CREATE_CHECKLIST, DELETE_CHECKLIST, MOVE_CARD, REMOVE_USER_FROM_CARD, UPDATE_CARD, UPDATE_CHECKLIST } from '@/graphql/mutation';
+import { ADD_USER_TO_CARD, CREATE_CHECKLIST, MOVE_CARD, REMOVE_USER_FROM_CARD, UPDATE_CARD, UPDATE_CHECKLIST } from '@/graphql/mutation';
 import { Checkbox } from "../ui/checkbox"
 
 type CardPropsType = {
@@ -62,13 +62,12 @@ function Card (props: CardPropsType) {
     const [description, setDescription] = React.useState('')
     const [checkListTitle, setCheckListTitile] = React.useState('')
     const [destinationId, setDestinationId] = React.useState('')
-    const [IncludeUserToCard, { loading }] = useMutation(ADD_USER_TO_CARD);
-    const [UpdateCard, { loading: loading2 }] = useMutation(UPDATE_CARD);
-    const [MoveCard, { loading: loading3 }] = useMutation(MOVE_CARD);
-    const [CreateCheckList, { loading: loading4 }] = useMutation(CREATE_CHECKLIST);
+    const  [IncludeUserToCard ] = useMutation(ADD_USER_TO_CARD);
+    const [ UpdateCard ] = useMutation(UPDATE_CARD);
+    const [ MoveCard ] = useMutation(MOVE_CARD);
+    const [ CreateCheckList ] = useMutation(CREATE_CHECKLIST);
     const [RemoveUserFromCard] = useMutation(REMOVE_USER_FROM_CARD);
     const [UpdateCheckList] = useMutation(UPDATE_CHECKLIST);
-    const [DeleteCheckList] = useMutation(DELETE_CHECKLIST);
 
     //handles the logic to add members to card
     async function addUser (id: string) {
@@ -157,19 +156,6 @@ function Card (props: CardPropsType) {
         try {
             const response = await UpdateCheckList({ 
                 variables: { id, checked },
-                refetchQueries: [{ query: GET_CARD, variables: { id: props.id } }], 
-            })
-            console.log(response)
-        } catch (error: any) {
-            console.log(error.message)
-        }
-    }
-
-    //handles delete checklist functionality to delete checklist items
-    async function deleteCheckList (id: string) {
-        try {
-            const response = await DeleteCheckList({ 
-                variables: { id },
                 refetchQueries: [{ query: GET_CARD, variables: { id: props.id } }], 
             })
             console.log(response)
@@ -400,7 +386,9 @@ function Card (props: CardPropsType) {
                             <PopoverContent className="w-auto p-0" align="start">
                                 <DayPicker          
                                     mode="single"
+                                    //@ts-ignore
                                     selected={startDate}
+                                    //@ts-ignore
                                     onSelect={setStartDate}
                                 />
                             </PopoverContent>
@@ -424,7 +412,9 @@ function Card (props: CardPropsType) {
                             <PopoverContent className="w-auto p-0" align="start">
                                 <DayPicker          
                                     mode="single"
+                                    //@ts-ignore
                                     selected={endDate}
+                                    //@ts-ignore
                                     onSelect={setEndDate}
                                 />
                             </PopoverContent>
@@ -453,7 +443,7 @@ type PropType = {
 //renders a modal to display card details
 export default function CardDetails ({id, showCardDetails, setShowCardDetails, workspaceData}: PropType) {
 
-    const { data, error } = useQuery(GET_CARD, {
+    const { data } = useQuery(GET_CARD, {
         variables: { id },
     });
 

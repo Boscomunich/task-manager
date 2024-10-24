@@ -15,14 +15,13 @@ import { motion } from 'framer-motion'
 type CardType = {
     id: string
     name: string
-    description: string
     listId: string
     workspaceData: any
     handleDragStart: (e: any, id: string) => void
 }
 
 //renders the card as seen inside the list items
-export default function CardDisplay ({ id, name, description, listId, workspaceData, handleDragStart }: CardType) {
+export default function CardDisplay ({ id, name, listId, workspaceData, handleDragStart }: CardType) {
 
     const [showCardDetails, setShowCardDetails] = useState(false)
 

@@ -1,7 +1,5 @@
-import { EllipsisVertical, FilePlus, Plus, Trash2 } from "lucide-react";
+import { EllipsisVertical, Plus, Trash2 } from "lucide-react";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import { useState } from "react";
 import { GET_LIST, GET_WORKSPACE } from "@/graphql/query";
 import { useMutation, useQuery } from "@apollo/client";
@@ -21,12 +19,11 @@ export default function ListDisplay ({id, name, workspaceData}: ListType) {
 
     const [addingCard, setAddingCard] = useState(false)
     const [cardName, setCardName] = useState('')
-    const [cardDescription, setCardDescription] = useState('')
-    const [MoveCard, { loading: loading2 }] = useMutation(MOVE_CARD);
+    const [ MoveCard ] = useMutation(MOVE_CARD);
 
-    const [CreateCard, { loading }] = useMutation(CREATE_CARD);
+    const [ CreateCard ] = useMutation(CREATE_CARD);
 
-    const { data, error } = useQuery(GET_LIST, {
+    const { data } = useQuery(GET_LIST, {
         variables: { id },
         fetchPolicy: 'cache-and-network',
     });
@@ -52,7 +49,7 @@ export default function ListDisplay ({id, name, workspaceData}: ListType) {
 
         try {
             const response = await CreateCard({
-                variables: { name: cardName, description: cardDescription, listId: id },
+                variables: { name: cardName, listId: id },
                 refetchQueries: [{ query: GET_LIST, variables: { id } }],
             })
             console.log(response);
