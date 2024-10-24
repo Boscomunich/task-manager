@@ -68,6 +68,14 @@ export async function addWorkSpaceCollaborator (id: string, email: string, owner
 }
 
 export async function acceptInvite (projectId: string, userId: string) {
+    const user = await prisma.user.findFirst({
+        where: {
+            id: userId
+        }
+    })
+
+    if (!user) throw new Error('user not found')
+
     const updatedWorkspace = await prisma.workspace.update({
         where: { id: projectId },
         data: {
@@ -76,17 +84,22 @@ export async function acceptInvite (projectId: string, userId: string) {
             },
         },
     });
+
+    const message = `user ${user.email} has accepted your invite to join your project ${updatedWorkspace.name}`
+
+    await sendNotification(message, 'Alert', updatedWorkspace.userId)
+
     return updatedWorkspace
 }
 
-export async function removeWorkSpaceCollaborator (owner:string, id: string, userId: string) {
-    if (!id || userId || !owner) throw new Error ('all fields are required')
+export async function removeWorkSpaceCollaborator (ownerId:string, id: string, userId: string) {
+    if (!id || !userId || !ownerId) throw new Error ('all fields are required')
     const workspace = await prisma.workspace.findUnique({
         where: { id },
         select: { userId: true }
     });
 
-    if (workspace?.userId !== owner) throw new Error('You are not authorized to perform this action')
+    if (workspace?.userId !== ownerId) throw new Error('You are not authorized to perform this action')
         
     const updatedWorkspace = await prisma.workspace.update({
         where: { id },
@@ -96,6 +109,11 @@ export async function removeWorkSpaceCollaborator (owner:string, id: string, use
             },
         },
     });
+
+    const message = `your have been remove from the project ${updatedWorkspace.name} by the owner`
+
+    await sendNotification(message, 'Alert', userId)
+
     return updatedWorkspace
 }
 

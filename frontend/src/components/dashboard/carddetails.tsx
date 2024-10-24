@@ -268,7 +268,7 @@ function Card (props: CardPropsType) {
                             <p className="py-2">Card members</p>
                             {
                                 props.assignedTo?.map((user:any) => (
-                                    <div key={user.id} className='rounded-sm px-3 py-1 hover:bg-slate-900'
+                                    <div key={user.id} className='rounded-sm px-3 py-1 dark:hover:bg-slate-900 hover:bg-slate-200'
                                     onClick={() => removeUser(user.id)}>
                                         {user.email}
                                     </div>
@@ -279,7 +279,7 @@ function Card (props: CardPropsType) {
                             <p className='py-2'>Board members</p>
                             {
                                 props.workspaceData?.workers.map((worker:any) => (
-                                    <div key={worker.id} className='rounded-sm px-3 py-1 hover:bg-slate-900'
+                                    <div key={worker.id} className='rounded-sm px-3 py-1 dark:hover:bg-slate-900 hover:bg-slate-200'
                                     onClick={() => addUser(worker.id)}>
                                         {worker.email}
                                     </div>
@@ -464,7 +464,7 @@ export default function CardDetails ({id, showCardDetails, setShowCardDetails, w
             <DialogTrigger asChild>
             <Button variant="outline">Edit Profile</Button>
             </DialogTrigger>
-            <DialogContent className="w-[750px] min-w-[80vw] h-[85vh] overflow-scroll">
+            <DialogContent className="w-[750px] min-w-[80vw] h-[85vh] overflow-scroll no-scrollbar">
             <DialogHeader>
                 <DialogTitle>Edit Card</DialogTitle>
                 <DialogDescription>

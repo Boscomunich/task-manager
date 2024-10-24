@@ -101,7 +101,7 @@ export default function ListDisplay ({id, name, workspaceData}: ListType) {
         onDrop={(event) => moveCard(event)}
         onDragOver={(event) => handleDragOver(event)}>
         <ScrollArea className="w-full h-full">
-            <div className="flex justify-between">
+            <div className="flex justify-between h-auto">
                 <div>{name}</div>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild className="cursor-pointer">

@@ -81,6 +81,17 @@ export const ADD_COLABORATORS = gql`
         }
     }
 `
+export const REMOVE_COLABORATORS = gql`
+    mutation RemoveCollaboratorsMutation ($ownerId: ID!, $id: ID!, $userId: ID ) {
+        RemoveCollaborators(id: $id, ownerId: $ownerId, userId: $userId) {
+            workers{
+                id
+                username
+                email
+            }
+        }
+    }
+`
 export const ACCEPT_INVITE = gql`
     mutation AcceptInvite ($projectId: String!, $userId: String! ) {
         AcceptInvite(projectId: $projectId, userId: $userId) {
@@ -158,6 +169,13 @@ export const DELETE_CHECKLIST = gql`
 export const DELETE_NOTIFICATION = gql`
     mutation DeleteNotification ($id: ID!) {
         DeleteNotification (id: $id) {
+            id
+        }
+    }
+`
+export const UPDATE_NOTIFICATION = gql`
+    mutation UpdateNotification ($id: ID!) {
+        UpdateNotification (id: $id) {
             id
         }
     }

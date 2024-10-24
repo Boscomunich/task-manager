@@ -27,3 +27,15 @@ export async function deleteNotification (id: string) {
     });
     return notification
 }
+
+export async function updateNotification (id: string) {
+    if (!id) throw new Error('ID is required');
+
+    const notification = await prisma.notification.update({
+        where: { id },
+        data: {
+            read: true
+        }
+    });
+    return notification
+}

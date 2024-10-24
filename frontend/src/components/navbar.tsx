@@ -15,8 +15,13 @@ import {
 export default function NavBar () {
     return (
         <div className="flex justify-between items-center h-[77px] gap-4 w-screen pl-4 py-3 bg-transparent fixed top-0 backdrop-blur-3xl z-20">
-            <div className="w-[50%] flex lg:justify-center">
-                <h1 className="text-4xl sm:xl font-bold">Insync</h1>
+            <div className="w-[50%] flex lg:justify-center item-center">
+                <div>
+                    <img src='/logo.png' className="h-20 w-20"/>
+                </div>
+                <h1 className="text-4xl sm:xl font-bold pt-4">
+                    Insync
+                </h1>
             </div>
             <div className="w-[50%] flex gap-2 justify-center md:hidden sm:hidden">
                 <Link to='/login'>

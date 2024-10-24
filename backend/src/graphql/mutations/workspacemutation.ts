@@ -34,12 +34,12 @@ export const WorkspaceMutations: GraphQLFieldConfigMap<any, any> = {
     RemoveCollaborators: {
         type: WorkspaceType,
         args: {
-            owner: { type: GraphQLString},
-            id: { type: GraphQLString},
-            userId: { type: GraphQLString}
+            ownerId: { type: GraphQLID},
+            id: { type: GraphQLID},
+            userId: { type: GraphQLID}
         },
         async resolve (parent, args) {
-            return await removeWorkSpaceCollaborator(args.owner, args.id, args.userId)
+            return await removeWorkSpaceCollaborator(args.ownerId, args.id, args.userId)
         }
     },
 

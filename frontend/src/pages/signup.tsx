@@ -25,16 +25,15 @@ export default function Signup () {
 
     // form validation with zod
     const formSchema = z.object({
-        password: z.string().min(1, {
-            message: "pls enter your password",
-        }),
-        username: z.string().min(3, {
-            message: "username must be at least 3 characters",
-        }),
-        email: z.string().email({
-            message: "pls enter a valid email"
-        })
-    })
+        password: z.string()
+            .min(1, { message: "Please enter your password" })
+            .refine((val) => /[A-Z]/.test(val), { message: "Password must contain at least one uppercase letter" })
+            .refine((val) => /[a-z]/.test(val), { message: "Password must contain at least one lowercase letter" })
+            .refine((val) => /[0-9]/.test(val), { message: "Password must contain at least one number" }),
+        username: z.string().min(3, { message: "Username must be at least 3 characters" }),
+        email: z.string().email({ message: "Please enter a valid email" })
+    });
+
 
     //form resolver
     const form = useForm<z.infer<typeof formSchema>>({
@@ -57,7 +56,10 @@ export default function Signup () {
     }
 
     return (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center flex-col items-center">
+            <Link to='/' className="flex w-full justify-center mt-5">
+                <h1 className="text-4xl sm:xl font-bold">Insync</h1>
+            </Link>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-20 border shadow-xl py-10 px-10 w-[400px]">
                     <h1 className="text-center text-2xl font-semibold">

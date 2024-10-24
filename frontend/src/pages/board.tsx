@@ -6,7 +6,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button";
 import { Plus, UsersRound } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { ADD_COLABORATORS, CREATE_LIST } from "@/graphql/mutation";
+import { ADD_COLABORATORS, CREATE_LIST, REMOVE_COLABORATORS } from "@/graphql/mutation";
 import ListDisplay from "@/components/dashboard/listdisplay";
 import {
     Popover,
@@ -43,6 +43,7 @@ export default function Board () {
 
     const [CreateList, { loading }] = useMutation(CREATE_LIST);
     const [AddCollaborators, { loading: loading2 }] = useMutation(ADD_COLABORATORS);
+    const [RemoveCollaborators, { loading: loading3 }] = useMutation(REMOVE_COLABORATORS);
 
     const { data } = useQuery(GET_WORKSPACE, {
         variables: { id: params.id },
@@ -75,6 +76,21 @@ export default function Board () {
         }
     }
 
+    //handles removing user from project
+    async function removeMember (id: string) {
+        try {
+            const response = await RemoveCollaborators({ 
+                variables: { id: params.id, ownerId: user?.id, userId: id },
+                refetchQueries: [{ query: GET_WORKSPACE, variables: { id: params.id } }]
+            })
+            console.log(response)
+            if (response.data) notify('user removed', 'success')
+        } catch (error: any) {
+            console.log(error.message)
+            notify(error.message, 'error')
+        }
+    }
+
     return (
         <div className="h-screen">
             <div className="flex justify-start items-center h-[50px] gap-4 w-full pl-4 py-3 border-b border-black">
@@ -95,6 +111,21 @@ export default function Board () {
                         </PopoverTrigger>
                         <PopoverContent className="w-80">
                             <div className="grid gap-4">
+                                <div>
+                                    {
+                                        data?.GetWorkspace?.workers?.map((worker: any, index: number) => (
+                                            <div key={index} className="flex justify-between gap-1 items-center">
+                                                <p>
+                                                    {worker.email}
+                                                </p>
+                                                <Button className="py-1 px-2 bg-transparent text-gray-500 dark:hover:text-white hover:bg-transparent"
+                                                onClick={() => removeMember(worker.id)}>
+                                                    Remove
+                                                </Button>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
                                 <div className="space-y-2">
                                     <h4 className="font-medium leading-none">Add members</h4>
                                 </div>
@@ -119,7 +150,7 @@ export default function Board () {
                 </div>
             </div>
             <ScrollArea className="w-full fixed whitespace-nowrap rounded-md h-[80vh] border p-2">
-                <div className="flex justify-start gap-3">
+                <div className="flex justify-start gap-3 h-auto">
                     {data && (
                         data?.GetWorkspace?.lists?.map((list: any) => (
                             <ListDisplay key={list.id} {...list} workspaceData={data.GetWorkspace}/>
@@ -130,7 +161,7 @@ export default function Board () {
                     addingList ?
                         <motion.div
                         layout
-                        className="w-[200px]">
+                        className="w-[200px] mr-7">
                         <textarea
                             onChange={(e) => setName(e.target.value)}
                             autoFocus

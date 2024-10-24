@@ -1,6 +1,5 @@
 import Features from "@/components/landingpage/features"
 import Hero from "@/components/landingpage/hero"
-import PAGE from "@/components/landingpage/pager"
 import Perks from "@/components/landingpage/perks"
 import WorkFlow from "@/components/landingpage/workflow"
 

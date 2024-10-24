@@ -22,7 +22,7 @@ import {
     FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { ACCEPT_INVITE, CREATE_WORKSPACE, DELETE_NOTIFICATION } from '@/graphql/mutation';
+import { ACCEPT_INVITE, CREATE_WORKSPACE, DELETE_NOTIFICATION, UPDATE_NOTIFICATION } from '@/graphql/mutation';
 import Card from '@/components/dashboard/card';
 import { 
         DropdownMenu, 
@@ -67,6 +67,7 @@ const NotificationItem = ({ type, message, id, projectId, createdAt, read }: Not
 
     const [AcceptInvite, { loading }] = useMutation(ACCEPT_INVITE);
     const [DeleteNotification, { loading: loading2 }] = useMutation(DELETE_NOTIFICATION);
+    const [UpdateNotification, { loading: loading3 }] = useMutation(UPDATE_NOTIFICATION);
 
 
     // accept invite and delete notification
@@ -117,17 +118,33 @@ const NotificationItem = ({ type, message, id, projectId, createdAt, read }: Not
         }
     } 
 
+    //deletes notification
+    async function updateNotification () {
+        try {
+            const response = await UpdateNotification(
+                { variables: { id } })
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    } 
+
     return (
         <div className={cn ("border-rare border shadow-md rounded-md w-full cursor-pointer p-2")}>
             <div className='flex items-center justify-between h-5'
             >
                 <div
-                className={cn ("text-xl font-medium w-[80%]", read && 'text-slate-500')}
-                onClick={() => setIsOpen(!isOpen)}>
+                className={cn ("text-lg font-medium w-[80%]", read && 'text-slate-500')}
+                onClick={() => {
+                    setIsOpen(!isOpen)
+                    if (!read) {
+                        updateNotification()
+                    }
+                }}>
                     {type}
                 </div>
                 <Button 
-                className='text-[10px] p-1 mt-1 bg-transparent'
+                className='text-[10px] p-1 mt-1 bg-transparent hover:bg-transparent text-gray-500'
                 onClick={() => deleteNotification()}
                 disabled={loading2}>
                     <Trash2 size={20}/>
@@ -293,7 +310,7 @@ export default function DashBoard() {
                             initial={{height: 0, opacity: 0}}
                             animate={active ? {height: 'auto', opacity: 1}: {height: 0, opacity: 0}}
                             transition={{duration: 0.2}}
-                            className='absolute top-[70%] right-10 w-[200px] p-2 dark:bg-gray-900 bg-slate-400 rounded-lg flex flex-col gap-3 overflow-hidden'>
+                            className='absolute top-[70%] right-10 w-[300px] p-2 dark:bg-gray-900 bg-slate-200 rounded-lg flex flex-col gap-3 overflow-hidden'>
                             {
                                 data?.GetUser?.notification?.length > 0 ? (
                                     data.GetUser.notification.map((item: Notification) => (
