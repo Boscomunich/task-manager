@@ -10,7 +10,7 @@ type Apolloprops = {
 export default function ApolloSetup ({ token, children }: Apolloprops) {
     // Create an HTTP link to your GraphQL server
     const httpLink = createHttpLink({
-        uri: 'http://localhost:5000/graphql',
+        uri: 'https://insync-server.onrender.com/graphql',
     });
 
     // Create an authentication link to set the Authorization header
