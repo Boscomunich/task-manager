@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
+    "preinstall": "npx prisma migrate dev --name init",
     "start": "nodemon"
   },
   "keywords": [],
