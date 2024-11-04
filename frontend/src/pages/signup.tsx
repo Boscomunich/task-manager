@@ -61,7 +61,7 @@ export default function Signup () {
                 <h1 className="text-4xl sm:xl font-bold">Insync</h1>
             </Link>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-20 border shadow-xl py-10 px-10 w-[400px]">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-20 border shadow-xl py-10 px-10 max-w-[400px] w-[95%]">
                     <h1 className="text-center text-2xl font-semibold">
                         SignIn
                     </h1>

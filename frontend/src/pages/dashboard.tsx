@@ -36,7 +36,7 @@ import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { Bell, Trash2 } from 'lucide-react';
-import { useToasts } from 'react-toast-notifications';
+import { toast } from 'react-toastify';
 
 type User = {
     id: string
@@ -59,10 +59,9 @@ const NotificationItem = ({ type, message, id, projectId, read }: Notification) 
 
     const user = useAuthUser<User>();
 
-    const { addToast } = useToasts();
-
     const notify = (message: string, appearance: any) => {
-        addToast(message, { appearance, autoDismiss: true });
+        if (appearance == 'success') toast.success(message);
+        if (appearance == 'error') toast.error(message);
     };
 
     const [AcceptInvite, { loading }] = useMutation(ACCEPT_INVITE);
@@ -243,11 +242,11 @@ export default function DashBoard() {
 
     return (
         <div>
-            <div className="flex justify-between items-center h-[50px] gap-4 w-screen pl-4 py-3 border-b border-black fixed top-0 z-20">
+            <div className="flex justify-between items-center h-[50px] gap-4 w-screen pl-4 py-3 border-b border-black fixed top-0 z-20 dark:bg-gray-900 bg-white">
                 <div className="w-[50%] flex justify-start gap-3 items-center">
                     <h1 className="text-2xl sm:xl font-bold">Insync</h1>
                     <Dialog>
-                        <DialogTrigger className="bg-blue-500 text-sm text-white py-1 px-2 rounded-md">
+                        <DialogTrigger className="bg-blue-500 text-sm sm:text-[12px] text-white py-1 px-2 rounded-md">
                             Create New Board
                         </DialogTrigger>
                         <DialogContent>
@@ -255,7 +254,7 @@ export default function DashBoard() {
                             <DialogTitle className='text-center'>Create a new Board</DialogTitle>
                             <DialogDescription className='flex justify-center'>
                                 <Form {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 border shadow-xl py-10 px-10 w-[400px]">
+                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 border shadow-xl py-10 px-10 max-w-[400px] w-[95%]">
                                     <FormField
                                     control={form.control}
                                     name="name"

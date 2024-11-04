@@ -454,7 +454,7 @@ export default function CardDetails ({id, showCardDetails, setShowCardDetails, w
             <DialogTrigger asChild>
             <Button variant="outline">Edit Profile</Button>
             </DialogTrigger>
-            <DialogContent className="w-[750px] min-w-[80vw] h-[85vh] overflow-scroll no-scrollbar">
+            <DialogContent className="w-[100%] max-w-[750px] h-[85vh] overflow-scroll no-scrollbar">
             <DialogHeader>
                 <DialogTitle>Edit Card</DialogTitle>
                 <DialogDescription>

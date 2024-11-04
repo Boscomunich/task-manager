@@ -14,12 +14,12 @@ import {
 
 export default function NavBar () {
     return (
-        <div className="flex justify-between items-center h-[77px] gap-4 w-screen pl-4 py-3 bg-transparent fixed top-0 backdrop-blur-3xl z-20">
+        <div className="flex justify-between items-center h-[77px] gap-4 w-screen pl-4 sm:pl-2 py-3 bg-transparent fixed top-0 backdrop-blur-3xl z-20">
             <div className="w-[50%] flex lg:justify-center item-center">
                 <div>
-                    <img src='/logo.png' className="h-20 w-20"/>
+                    <img src='/logo.png' className="size-20 sm:size-14"/>
                 </div>
-                <h1 className="text-4xl sm:xl font-bold pt-4">
+                <h1 className="text-4xl sm:text-2xl font-bold pt-4 sm:pt-3">
                     Insync
                 </h1>
             </div>

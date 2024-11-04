@@ -10,7 +10,8 @@ import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import ApolloSetup from './apollosetup';
 import Board from './pages/board';
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated'
-import { ToastProvider } from 'react-toast-notifications';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const authHeader = useAuthHeader()
@@ -19,9 +20,9 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <ToastProvider>
         <ApolloSetup token={authHeader}>
         <BrowserRouter>
+        <ToastContainer />
           <Routes>
             <Route path='/' element={isAuthenticated ? <Navigate to='/dashboard'/> : <Layout/>}>
               <Route index element={<Home/>}/>
@@ -35,7 +36,6 @@ function App() {
           </Routes>
         </BrowserRouter>
         </ApolloSetup>
-        </ToastProvider>
     </ThemeProvider>
   )
 }

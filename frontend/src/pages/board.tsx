@@ -16,7 +16,7 @@ import {
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { motion } from 'framer-motion'
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import { useToasts } from 'react-toast-notifications';
+import { toast } from 'react-toastify';
 
 type User = {
     id: string
@@ -30,14 +30,14 @@ export default function Board () {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
 
-    const { addToast } = useToasts();
 
     const user = useAuthUser<User>();
 
     const params = useParams()
 
     const notify = (message: string, appearance: any) => {
-        addToast(message, { appearance, autoDismiss: true });
+        if (appearance == 'success') toast.success(message);
+        if (appearance == 'error') toast.error(message);
     };
 
     const [ CreateList ] = useMutation(CREATE_LIST);
